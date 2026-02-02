@@ -1,15 +1,78 @@
+import express from 'express';
+import cors from 'cors';
+import mongoose from 'mongoose';
+import bodyParser from 'body-parser';
+import http from 'http';
+import {Server} from 'socket.io';
+import dotenv from "dotenv";
+dotenv.config();
+
+
 import yargs from 'yargs';
 import {hideBin} from 'yargs/helpers';
 
 
-import initRepo from './controllers/init.js';
-import addRepo from './controllers/add.js';
-import commitRepo from './controllers/commit.js';
-import pushRepo from './controllers/push.js';
-import pullRepo from './controllers/pull.js';
-import revertRepo from './controllers/revert.js';
+import initRepo from './controllers/terminalCommands/init.js';
+import addRepo from './controllers/terminalCommands/add.js';
+import commitRepo from './controllers/terminalCommands/commit.js';
+import pushRepo from './controllers/terminalCommands/push.js';
+import pullRepo from './controllers/terminalCommands/pull.js';
+import revertRepo from './controllers/terminalCommands/revert.js';
+
+import mainRouter from './routes/main.routes.js';
+
+const startServer = () => {
+    const app = express();
+    const port = process.env.PORT || 5000;
+    const mongoURI = process.env.MONGODB_URI;
+
+    app.use(cors({origin: '*'}));
+    app.use(bodyParser.json({limit: '10mb'}));
+    app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
+    app.use(express.json());
+
+    app.use('/', mainRouter);
+
+
+    mongoose.connect(mongoURI)
+        .then(() => {console.log("MongoDB connected");})
+        .catch((err) => {console.log("Unable to connect: ", err);})
+
+    const httpServer = http.createServer(app);
+    const io = new Server(httpServer, {
+        cors: {
+            origin: "*",
+            methods: ["GET", "POST"]
+        }}
+    );
+
+    io.on("connection", (socket) => {
+        socket.on("joinRoom", (userID) => {
+            user = userID;
+            console.log("====================");
+            console.log(`User connected: ${user}`);
+            console.log("====================");
+            socket.join(userID);
+        })
+    })
+
+    const db = mongoose.connection;
+    db.once('open', async() => {
+        console.log("CRUD operations called!");
+    });
+
+    httpServer.listen(port, () => {
+        console.log(`Server is running on port: ${port}`);
+    })
+}
 
 yargs(hideBin(process.argv))
+    .command(
+        "start",
+        "Starts a new backend server",
+        {},
+        startServer
+    )
     .command(
         "init",
         "Initialize a new repository",
