@@ -12,13 +12,13 @@ import {
 
 const repoRouter = express.Router();
 
-repoRouter.post('/createRepo', createRepo);
+repoRouter.post('/create', createRepo);
 repoRouter.get('/allrepos', getAllRepos);
-repoRouter.get('/name/:name', fetchRepoByName);
-repoRouter.get('/id/:id', fetchRepoById);
 repoRouter.get('/:repoId', getRepo);
-repoRouter.put('/:id', updateRepoById);
+repoRouter.get('/:name', fetchRepoByName);
+repoRouter.get('/:id', fetchRepoById);
 repoRouter.patch('/toggleVis/:id', toggleVisById);
-repoRouter.delete('/deleteRepo/:id', deleteRepoById);
+repoRouter.put('/update/:id', updateRepoById);
+repoRouter.delete('/delete/:id', deleteRepoById);
 
 export default repoRouter;
