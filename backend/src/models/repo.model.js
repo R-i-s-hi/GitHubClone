@@ -15,7 +15,7 @@ const RepositorySchema = new mongoose.Schema({
         }
     ],
     visibility: {
-        default: false,
+        default: true,
         type: Boolean,
     },
     owner: {

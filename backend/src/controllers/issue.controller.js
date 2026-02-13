@@ -1,19 +1,93 @@
-export const createIssue = (req, res) => {
-    res.send('Create issue controller called');
+import mongoose from "mongoose";
+import Issue from "../models/issue.model.js";
+
+export const createIssue = async(req, res) => {
+  const { title, description } = req.body;
+  const { id } = req.params;
+
+  try {
+    const issue = new Issue({
+      title,
+      description,
+      repository: id,
+    });
+
+    await issue.save();
+
+    res.status(201).json(issue);
+  } catch (err) {
+    console.error("Error during issue creation : ", err.message);
+    res.status(500).send("Server error");
+  }
 }
 
-export const getAllIssues = (req, res) => {
-    res.send('Get all issues controller called');
+export const getAllIssues = async(req, res) => {
+    const { id } = req.params;
+
+  try {
+    const issues = await Issue.find({ repository: id });
+
+    if (!issues || issues.length === 0) {
+      return res.status(404).json({ error: "Issues not found!" });
+    }
+    res.status(200).json(issues);
+  } catch (err) {
+    console.error("Error during issue fetching : ", err.message);
+    res.status(500).send("Server error");
+  }
 }
 
-export const getIssueById = (req, res) => {
-    res.send('Get issue by ID controller called');
+export const getIssueById = async(req, res) => {
+  const { issueId } = req.params;
+  try {
+    const issue = await Issue.findById(issueId);
+
+    if (!issue) {
+      return res.status(404).json({ error: "Issue not found!" });
+    }
+
+    res.json(issue);
+  } catch (err) {
+    console.error("Error during issue fetching : ", err.message);
+    res.status(500).send("Server error");
+  }
 }
 
-export const updateIssueById = (req, res) => {
-    res.send('Update issue by ID controller called');
+export const updateIssueById = async(req, res) => {
+  const { id } = req.params;
+  const { title, description, status } = req.body;
+  try {
+    const issue = await Issue.findById(id);
+
+    if (!issue) {
+      return res.status(404).json({ error: "Issue not found!" });
+    }
+
+    issue.title = title;
+    issue.description = description;
+    issue.status = status;
+
+    await issue.save();
+
+    res.json(issue, { message: "Issue updated" });
+  } catch (err) {
+    console.error("Error during issue updation : ", err.message);
+    res.status(500).send("Server error");
+  }
 }
 
-export const deleteIssueById = (req, res) => {
-    res.send('Delete issue by ID controller called');
+export const deleteIssueById = async(req, res) => {
+  const { id } = req.params;
+
+  try {
+    const issue = Issue.findByIdAndDelete(id);
+
+    if (!issue) {
+      return res.status(404).json({ error: "Issue not found!" });
+    }
+    res.json({ message: "Issue deleted" });
+  } catch (err) {
+    console.error("Error during issue deletion : ", err.message);
+    res.status(500).send("Server error");
+  }
 }
