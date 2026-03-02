@@ -1,0 +1,62 @@
+nav {
+  display: flex;
+  padding: 1rem 2rem;
+  color: #f1f6fd;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 0.8px solid rgba(255, 255, 255, 0.781);
+  background-color: #0c1116;
+}
+
+nav img {
+  height: 26px;
+  border-radius: 100%;
+}
+nav div {
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  gap: 2rem;
+}
+
+nav h3 {
+  color: #f1f6fd;
+}
+
+nav p {
+  font-size: 13px;
+  font-weight: bold;
+  color: #f1f6fd;
+}
+
+nav .navbar-link {
+  text-decoration: none;
+}
+
+nav .create-repo-btn {
+    padding: 5px 13px;
+    background-color: rgb(1, 159, 1);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+nav .create-repo-btn:active {
+    background-color: green;
+}
+nav .create-repo-btn:hover {
+    background-color: green;
+}
+
+nav .profile-btn {
+    width: 28px;
+    height: 28px;
+    background-color: #863bcb;
+    border: none;
+    border-radius: 50%;
+    color: #f1f2fd;
+    cursor: pointer;
+}
+
+nav .profile-btn:hover {
+  background-color: blueviolet;
+}

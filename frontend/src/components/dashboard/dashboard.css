@@ -1,0 +1,232 @@
+
+.dashboard {
+  display: flex;
+  padding: 1rem 2rem;
+  justify-content: space-between;
+  background-color: #0c1116;
+  color: #f1f6fd;
+  width: 100%;
+  height: 100dvh;
+}
+
+.dashboard aside:nth-child(1) {
+  display: flex;
+  flex-direction: column;
+  width: 25%;
+  border: 0.8px solid rgba(255, 255, 255, 0.781);
+  padding: 2rem;
+  max-height: 600px;
+  border-radius: 23px;
+}
+
+.dashboard main {
+  width: 50%;
+  border: 0.8px solid rgba(255, 255, 255, 0.781);
+  padding: 2rem;
+  max-height: 600px;
+  border-radius: 23px;
+}
+
+.dashboard main h2 {
+  margin-bottom: 1.5rem;
+}
+
+.dashboard main #search input {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 9px;
+    border: none;
+    outline: none;
+    background-color: black;
+    font-size: 13px;
+    color: #f1fdf6;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+
+.dashboard main #search input:focus {
+  border: 0.8px solid rgba(128, 128, 128, 0.45);
+}
+
+.dashboard aside:nth-child(3) {
+  width: max-content;
+  height: fit-content;
+  border: 0.8px solid rgba(255, 255, 255, 0.781);
+  padding: 1.5rem;
+  border-radius: 23px;
+}
+
+.dashboard aside:nth-child(3) .event-listing {
+  padding: 0.8rem;
+  font-size: 12px;
+  font-weight: 500;
+  list-style-type: circle;
+}
+
+.dashboard aside:nth-child(3) .event-listing li {
+  margin-bottom: 0.4rem;
+}
+
+.dashboard aside h3 {
+  margin-bottom: 2rem;
+}
+
+.dashboard .search-repo-div {
+    background-color: black;
+    height: max-content;
+    max-height: 436px;
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+    overflow-y: auto;
+}
+
+.dashboard .repo-div {
+  background-color: black;
+  margin-bottom: 0.3rem;
+  border-radius: 10px;
+  padding: 0.5rem 0.8rem;
+}
+
+.dashboard .repo-div h4, .dashboard .search-repo-div h4 {
+  font-size: 14px;
+  margin-bottom: 0.3rem;
+}
+
+.dashboard .repo-div h4:hover, .dashboard .search-repo-div h4:hover {
+  text-decoration: underline;
+  text-decoration-color: rgb(23, 23, 253);
+  color: blue;
+  cursor: pointer;
+}
+
+.dashboard .repo-div p, .dashboard .search-repo-div p {
+  font-size: 10px;
+}
+
+.suggested-events {
+  display: none;
+}
+
+.suggested-repo {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.dashboard aside:nth-child(1) .suggest-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dashboard aside:nth-child(1) .suggest-heading button {
+  display: none;
+}
+
+.close-suggestions {
+  display: none;
+}
+
+.open-suggestions {
+  display: flex;
+}
+
+.open-offcanvas {
+  display: none;
+  border: none;
+  padding: 7px 14px;
+  border-radius: 8px;
+  background-color: black;
+  color: #f1f6fd;
+  font-size: 12px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.open-offcanvas:hover {
+  border: 0.8px solid rgba(128, 128, 128, 0.45);
+}
+
+@media(max-width: 1160px) {
+  .dashboard aside:nth-child(1) {
+    padding: 1rem;
+  }
+
+  .dashboard aside h3 {
+    margin-top: 1rem;
+  }
+}
+
+@media(max-width: 980px) {
+  .dashboard {
+    padding: 1rem;
+    gap: 1rem;
+  }
+  .dashboard aside:nth-child(1) {
+    width: 250px;
+  }
+  .dashboard aside:nth-child(3) {
+    display: none;
+  }
+  .dashboard main {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+  .suggested-events {
+    display: block;
+  }
+  .suggested-events .event-listing {
+    padding-inline: 1.2rem;
+  }
+  .suggested-events h3 {
+    font-size: 15px;
+    margin-top: 0.6rem;
+  }
+  .suggested-events .event-listing p {
+    font-size: 12px;
+  }
+  .dashboard .repo-div p {
+    display: none;
+  }
+}
+
+@media(max-width: 860px) {
+  .dashboard .repo-div p {
+    display: none;
+  }
+}
+
+@media(max-width: 780px) {
+  .open-offcanvas {
+    display: flex;
+  }
+  .dashboard main h2 {
+    margin-bottom: 0;
+  }
+  .dashboard main span {
+    margin-bottom: 1rem;
+  }
+  .dashboard aside:nth-child(1) {
+    position: fixed;
+    top: 11%;
+    left: -100%;
+    height: 100%;
+    width: 96%;
+    background-color: #0c1116;
+    transition: left 0.3s ease;
+    z-index: 1000;
+  }
+
+  .dashboard aside:nth-child(1).active {
+    left: 2%;
+  }
+
+  .dashboard aside:nth-child(1) .suggest-heading button {
+    display: flex;
+    background-color: #0c1116;
+    border: none;
+    margin-bottom: 1rem;
+    cursor: pointer;
+  }
+}

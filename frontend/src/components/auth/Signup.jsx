@@ -50,7 +50,7 @@ function Signup() {
 
       <div className="login-box-wrapper">
         <div className="login-heading">
-          <h1 className="login-heading-text">Sign in to GitHub</h1>
+          <h1 className="login-heading-text">Sign up</h1>
         </div>
 
         <div className="login-box">
