@@ -52,11 +52,11 @@ export const getAllRepos = async (req, res) => {
 export const fetchRepoById = async (req, res) => {
   const { id } = req.params;
   try {
-    const repository = await Repository.find({ _id: id })
+    const repository = await Repository.findById(id)
       .populate("owner")
       .populate("issues");
 
-    res.json(repository);
+    res.status(200).json(repository);
   } catch (err) {
     console.error("Error during fetching repository : ", err.message);
     res.status(500).send("Server error");

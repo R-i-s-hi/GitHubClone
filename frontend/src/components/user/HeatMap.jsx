@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import HeatMap from "@uiw/react-heat-map";
+import './hashmap.css'
 
 // Function to generate random activity
 const generateActivityData = (startDate, endDate) => {
@@ -35,8 +36,8 @@ const HeatMapProfile = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const startDate = "2001-01-01";
-      const endDate = "2001-01-31";
+      const startDate = "2025-03-06";
+      const endDate = "2026-03-06";
       const data = generateActivityData(startDate, endDate);
       setActivityData(data);
 
@@ -47,22 +48,23 @@ const HeatMapProfile = () => {
     fetchData();
   }, []);
 
+
   return (
-    <div>
+    <div className="HeatMapWrapper">
       <h4>Recent Contributions</h4>
       <HeatMap
         className="HeatMapProfile"
-        style={{ maxWidth: "700px", height: "200px", color: "white" }}
         value={activityData}
-        weekLabels={["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]}
-        startDate={new Date("2001-01-01")}
-        rectSize={15}
-        space={3}
-        rectProps={{
-          rx: 2.5,
-        }}
+        weekLabels={["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]}
+        startDate={new Date("2025-03-06")}
+        rectSize={window.innerWidth < 600 ? 12 : 18}
+        space={4}
+        rectProps={{ rx: 3 }}
         panelColors={panelColors}
       />
+
+
+
     </div>
   );
 };

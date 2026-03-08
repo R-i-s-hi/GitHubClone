@@ -6,6 +6,8 @@ import Dashboard from "./components/dashboard/Dashboard.jsx";
 import Profile from "./components/user/Profile.jsx";
 import Login from "./components/auth/Login.jsx";
 import Signup from "./components/auth/Signup.jsx";
+import Form from "./components/repo/Form.jsx";
+import Repo from "./components/repo/repo.jsx";
 
 
 const ProjectRoutes = () => {
@@ -44,6 +46,14 @@ const ProjectRoutes = () => {
         {
             path:"/profile",
             element:<Profile/>
+        },
+        {
+            path:"/create",
+            element:<Form/>
+        },
+        {
+            path:"/repo/:id",
+            element:<Repo/>
         }
     ]);
 

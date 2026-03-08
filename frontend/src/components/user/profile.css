@@ -1,15 +1,18 @@
 .profile-page-wrapper {
   display: flex;
-  min-height: 100vh;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8rem;
   color: whitesmoke;
   width: 100%;
-  /* flex-wrap: wrap; */
+  background-color: #0c1110;
+  padding-inline: 5rem;
 }
 
 .user-profile-section {
-  width: 250px;
-  /* min-height: 100vh; */
+  width: 350px;
   display: flex;
+  align-items: center;
   flex-direction: column;
   padding: 40px 10px;
 }
@@ -26,21 +29,33 @@
   /* margin: 10px auto; */
 }
 
-.profile-image {
+.profile-image  {
   margin: 10px auto;
-  width: 100px;
-  height: 100px;
+  width: 200px;
+  height: 200px;
   border-radius: 50%;
   background-color: grey;
 }
 
+.underlineNavComponent {
+  padding-left: 2rem !important;
+  padding-block: 0;
+  border-bottom: 0.8px solid rgba(128, 128, 128, 0.785);
+}
+
 .follow-btn {
   background-color: #20272d;
-  width: 250px;
+  width: 100%;
   margin: 10px auto;
   height: 40px;
   border-radius: 10px;
+  border: none;
   color: whitesmoke;
+}
+
+.follow-btn:hover {
+  cursor: pointer;
+  border: 1px solid #80808073;
 }
 
 .follower {
@@ -84,9 +99,86 @@
   font-size: 15px;
 }
 
+.heat-map-section {
+  width: stretch;
+  height: stretch;
+  display: flex;
+  align-items: center;
+}
+
+.reposContainer {
+  background-color: #0c1110;
+  padding-inline: 5rem;
+  margin-bottom: 1.5rem;
+}
+
+.reposContainer .norepo {
+  color: white;
+  text-align: center;
+}
+
+.reposContainer .repotag {
+  color: white;
+  font-size: 19px;
+  margin-bottom: 2rem;
+}
+
+.reposContainer .repos .col {
+  border: 0.8px solid #20272d;
+  padding: 10px 13px;
+  color: rgba(245, 245, 245, 0.914);
+  border-radius: 12px;
+}
+
+.reposContainer .repos .col a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.reposContainer .repos .col a:hover {
+  text-decoration: underline;
+  color: rgb(26, 26, 233);
+  text-decoration-color: rgb(26, 26, 233);
+}
+
+.reposContainer .repos .col .badge {
+  background-color: #0c1110 !important;
+  border: 1px solid #6c757d;
+  padding: 2px 5px;
+  font-size: 9px;
+  font-weight: 400;
+  margin-bottom: 2px;
+}
+
+.reposContainer .repos .col p {
+  opacity: 0.8;
+}
+
+.reposContainer .repos div p {
+  margin-bottom: 0;
+  font-size: 12px;
+}
+
+.reposContainer .repos div h4 {
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+@media(max-width: 980px) {
+  .profile-page-wrapper {
+    padding-inline: 1rem;
+  }
+  .reposContainer {
+    padding-inline: 2rem;
+  }
+}
+
 @media screen and (max-width: 750px) {
   .repo {
     width: 100%;
+  }
+  .profile-page-wrapper {
+    flex-direction: column;
   }
 }
 
@@ -98,8 +190,4 @@
   .profile-page-wrapper {
     display: block;
   }
-}
-
-#logout:hover {
-  border: 1px solid white;
 }

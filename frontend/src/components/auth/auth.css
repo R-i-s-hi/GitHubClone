@@ -3,7 +3,7 @@
     height: 100vh;
     width: 100vw;
     font-family: "Asap", sans-serif;
-    background-color: #0c1116;
+    background-color: #0c1110;
 }
 
 .login-logo-container {
@@ -43,7 +43,7 @@
 .input {
     width: 250px;
     height: 32px;
-    background-color: #0c1116;
+    background-color: #0c1110;
     border-radius: 5px;
     padding: 0 1rem;
     border: 0.5px solid #f1f6fd;

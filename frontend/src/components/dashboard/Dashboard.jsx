@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./dashboard.css";
 import Navbar from "../Navbar.jsx";
+import {Link} from 'react-router-dom';
 
 function Dashboard() {
 
@@ -62,18 +63,18 @@ function Dashboard() {
     <>
       <Navbar />
       <section className="dashboard">
-        <aside className={`offcanvas ${isOpen ? "active" : ""}`}>
-            <div className="suggest-heading">
-              <h3>Suggestions</h3>
-              <button onClick={() => setIsOpen(false)}>
+        <aside className={`custom-offcanvas ${isOpen ? "active" : ""}`}>
+          <div className="suggest-heading">
+            <h3>Suggestions</h3>
+            <button onClick={() => setIsOpen(false)}>
 
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" transform="rotate(0 0 0)">
-                <path d="M5.9545 5.95548C6.39384 5.51614 7.10616 5.51614 7.5455 5.95548L11.999 10.409L16.4524 5.95561C16.8918 5.51627 17.6041 5.51627 18.0434 5.95561C18.4827 6.39495 18.4827 7.10726 18.0434 7.5466L13.59 12L18.0434 16.4534C18.4827 16.8927 18.4827 17.605 18.0434 18.0444C17.6041 18.4837 16.8918 18.4837 16.4524 18.0444L11.999 13.591L7.5455 18.0445C7.10616 18.4839 6.39384 18.4839 5.9545 18.0445C5.51517 17.6052 5.51516 16.8929 5.9545 16.4535L10.408 12L5.9545 7.54647C5.51516 7.10713 5.51517 6.39482 5.9545 5.95548Z" fill="#f1fdf6"/>
-                </svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" transform="rotate(0 0 0)">
+              <path d="M5.9545 5.95548C6.39384 5.51614 7.10616 5.51614 7.5455 5.95548L11.999 10.409L16.4524 5.95561C16.8918 5.51627 17.6041 5.51627 18.0434 5.95561C18.4827 6.39495 18.4827 7.10726 18.0434 7.5466L13.59 12L18.0434 16.4534C18.4827 16.8927 18.4827 17.605 18.0434 18.0444C17.6041 18.4837 16.8918 18.4837 16.4524 18.0444L11.999 13.591L7.5455 18.0445C7.10616 18.4839 6.39384 18.4839 5.9545 18.0445C5.51517 17.6052 5.51516 16.8929 5.9545 16.4535L10.408 12L5.9545 7.54647C5.51516 7.10713 5.51517 6.39482 5.9545 5.95548Z" fill="#f1fdf6"/>
+              </svg>
 
 
-              </button>
-            </div>
+            </button>
+          </div>
           <div className="suggested-repo">
             {suggestedRepositories.length === 0 ? 
             (
@@ -83,7 +84,9 @@ function Dashboard() {
               suggestedRepositories.map((repo) => {
                 return (
                   <div className="repo-div" key={repo._id}>
-                    <h4>{repo.name}</h4>
+                    <Link id='repo-name' to={`/repo/${repo._id}`}>
+                      <h4>{repo.name}</h4>
+                    </Link>
                     <p>{repo.description}</p>
                 </div>
                 )
@@ -110,12 +113,18 @@ function Dashboard() {
 
           </div>
         </aside>
-        <main>
+        <main className="d-flex flex-column">
 
-          <span style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
-            <button onClick={() => setIsOpen(true)} className="open-offcanvas"> ☰ Suggestions </button>
+          <div>
+
+            <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.8rem"}}>
+            <button onClick={() => setIsOpen(true)} className="open-offcanvas">
+              <p>
+                ☰ <span className="suggestion-btn-line">Suggestions</span>
+              </p>
+            </button>
             <h2>Your Repositories</h2>
-          </span>
+          </div>
 
           <div id="search">
             <input
@@ -125,14 +134,24 @@ function Dashboard() {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          {searchResults.map((repo) => {
+
+          </div>
+
+          <div className="main-repos">
+
+            {searchResults.map((repo) => {
             return (
-              <div className="search-repo-div"  key={repo._id}>
-                <h4>{repo.name}</h4>
-                <p>{repo.description}</p>
-              </div>
-            );
-          })}
+                <div className="search-repo-div"  key={repo._id}>
+                  <Link id="repo-name" to={`/repo/${repo._id}`}>
+                    <h4>{repo.name}</h4>
+                  </Link>
+                  <p>{repo.description}</p>
+                </div>
+              );
+            })}
+
+          </div>
+
         </main>
         <aside>
           <h3 style={{ marginBottom: "0.5rem", marginTop: "0" }}>Upcoming Events</h3>
