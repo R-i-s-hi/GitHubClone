@@ -76,19 +76,20 @@ function Dashboard() {
             </button>
           </div>
           <div className="suggested-repo">
-            {suggestedRepositories.length === 0 ? 
-            (
+            {suggestedRepositories.filter(repo => repo.visibility).length === 0 ? (
               <p>No suggested repositories available.</p>
             ) : 
             (
-              suggestedRepositories.map((repo) => {
+              suggestedRepositories
+                .filter(repo => repo.visibility)
+                .map((repo) => {
                 return (
                   <div className="repo-div" key={repo._id}>
                     <Link id='repo-name' to={`/repo/${repo._id}`}>
-                      <h4>{repo.name}</h4>
+                      <h4 className="mb-0">{repo.name}</h4>
                     </Link>
-                    <p>{repo.description}</p>
-                </div>
+                    <span style={{fontSize: "9px", color: "#808080"}}>owner: @{repo.owner.username}</span>
+                  </div>
                 )
               })
             )
@@ -135,23 +136,28 @@ function Dashboard() {
             />
           </div>
 
+          <hr className="mt-0 mb-3 mx-1" style={{color: "gray", opacity: "0.11"}} />
+
           </div>
 
           <div className="main-repos">
 
-            {searchResults.map((repo) => {
-            return (
-                <div className="search-repo-div"  key={repo._id}>
+            {searchResults && searchResults.length > 0 ? (
+              searchResults.map((repo) => (
+                <div className="search-repo-div" key={repo._id}>
                   <Link id="repo-name" to={`/repo/${repo._id}`}>
                     <h4>{repo.name}</h4>
                   </Link>
-                  <p>{repo.description}</p>
+                  <p style={{ color: "#808080" }}>
+                    Created on: {new Date(repo.createdAt).toLocaleDateString()}
+                  </p>
                 </div>
-              );
-            })}
+              ))
+            ) : (
+              <p>No repo yet. Create a repo</p>
+            )}
 
           </div>
-
         </main>
         <aside>
           <h3 style={{ marginBottom: "0.5rem", marginTop: "0" }}>Upcoming Events</h3>

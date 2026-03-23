@@ -5,8 +5,9 @@
 
 .repo-div span {
     display: flex;
-    align-items: center;
-    gap: 1rem;
+    align-items: top;
+    gap: 0.6rem;
+    height: fit-content;
 }
 
 .repo-div span h4 {
@@ -21,6 +22,7 @@
     font-weight: 400;
     border-radius: 20px;
     padding: 3px 8px;
+    margin-top: 4px;
 }
 
 .heading-div {
@@ -28,6 +30,17 @@
     align-items: center;
     justify-content: space-between;
     padding-block: 2rem 0.3rem;
+}
+
+.heading-div #userProfileLink {
+    margin-top: -8px;
+    text-decoration: none;
+}
+
+.heading-div #userProfileLink:hover {
+    color: #0d6efd !important;
+    text-decoration: underline;
+    text-decoration-color: #0d6efd;
 }
 
 .heading-btns button p {
@@ -41,6 +54,72 @@
 .heading-btns {
     display: flex;
     gap: 0.4rem;
+}
+
+#staticBackdrop2 .modal-body .edit-repo-form, #staticBackdrop3 .modal-body .edit-repo-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+#staticBackdrop2 .modal-body .edit-repo-form div, #staticBackdrop3 .modal-body .edit-repo-form div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+
+}
+
+#staticBackdrop2 .modal-body .edit-repo-form .modal-footer {
+    display: flex !important;
+}
+
+#staticBackdrop2 .modal-body .edit-repo-form div label, #staticBackdrop3 .modal-body .edit-repo-form div label {
+    font-size: 13px;
+    font-weight: 500;
+}
+
+#staticBackdrop3 .modal-body .modal-footer button {
+    height: 28px !important;
+}
+
+#staticBackdrop2 .modal-body .edit-repo-form div input, #staticBackdrop2 .modal-body .edit-repo-form div textarea, #staticBackdrop3 .modal-body .edit-repo-form div input, #staticBackdrop3 .modal-body .edit-repo-form div textarea {
+    background-color: black;
+    border: none;
+    padding: 8px 10px;
+    color: whitesmoke;
+    font-size: 12px;
+    border-radius: 8px;
+}
+
+#staticBackdrop2 .modal-body .edit-repo-form .visibilityLabel {
+    font-size: 13px !important;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+
+#staticBackdrop2 .modal-body .edit-repo-form .visibilityLabel div p:nth-child(2) {
+    margin-top: -3px;
+    font-size: 10px;
+    color: #808080;
+}
+
+#staticBackdrop2 .modal-body .edit-repo-form .visibilityLabel input[type="radio"] {
+  appearance: none;
+  -webkit-appearance: none;
+  margin-top: 0;
+  width: 21px !important;
+  height: 20px !important;
+  border: 1px solid rgba(245, 245, 245, 0.171);
+  border-radius: 10px;
+  cursor: pointer;
+  position: relative;
+}
+
+#staticBackdrop2 .modal-body .edit-repo-form .visibilityLabel input[type="radio"]:checked {
+  background-color: rgb(1, 177, 1);
+  border-color: rgb(1, 87, 1);
 }
 
 .repo-files-div .repo-files .branch {
@@ -218,8 +297,17 @@
         padding-inline: 8px;
     }
 
-        .repo-files-div .repo-files .branch .left .dropdown-toggle svg {
+    .repo-files-div .repo-files .branch .left .dropdown-toggle svg {
         display: none;
     }
 
+}
+
+@media(max-width: 470px) {
+    .repo-div span h4 {
+        width: 125px;
+    }
+    .repo-div span {
+        gap: 0;
+    }
 }

@@ -1,0 +1,98 @@
+.custom-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1050;
+}
+
+.custom-modal {
+    background-color: #0c1110;
+    color: whitesmoke;
+    border-radius: 8px;
+    min-width: 350px;
+    border: 0.8px solid #808080ac;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 0.8px solid #808080ac;
+    padding: 0.8rem;
+}
+
+.modal-header button {
+    font-size: 9px;
+    padding: 0.1rem 0.3rem;
+    background-color: #808080ac;
+    border: none;
+}
+
+.modal-header .modal-title {
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.modal-body {
+    padding: 1.5rem 1rem;
+}
+
+.modal-body p {
+    font-size: 0.8rem !important;
+}
+
+.modal-body .link {
+    font-weight: 500;
+    color: #0902ff !important;
+}
+
+.modal-body .link:hover {
+    color: #0a02ffd5  !important;
+    text-decoration: underline;
+    text-decoration-color: #3c84f0;
+}
+
+.edit-repo-form, #staticBackdrop3 .modal-body .edit-repo-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.edit-repo-form div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+
+}
+
+.custom-modal .modal-footer {
+    display: flex !important;
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+    padding-right: 1rem;
+}
+
+.edit-repo-form div label {
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.custom-modal .modal-footer button {
+    height: 25px !important;
+    font-size: small;
+}
+
+.edit-repo-form div input, .edit-repo-form div textarea {
+    background-color: black;
+    border: none;
+    padding: 8px 10px;
+    color: whitesmoke;
+    font-size: 12px;
+    border-radius: 8px;
+}

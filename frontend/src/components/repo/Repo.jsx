@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import Navbar from '../Navbar';
 import './repo.css'
@@ -7,21 +7,167 @@ import './repo.css'
 function Repo() {
   const { id } = useParams();
   const [repo, setRepo] = useState(null);
+  const [repoData, setRepoData] = useState(null);
+  const [isStared, setIsStared] = useState(false);
+  const [currRepoId, setCurrRepoId] = useState("");
+
+  const currUser = localStorage.getItem("userId");
+  const navigate = useNavigate();
+
+  const [formValues, setFormValues] = useState({
+    name: "",
+    description: "",
+    visibility: true,
+  });
+
+  const [issueValues, setIssueValues] = useState({
+    title: "",
+    description: "",
+    user: currUser
+  });
 
   useEffect(() => {
-    const fetchRepo = async () => {
-      try {
-        const data = await fetch(`http://localhost:5000/repo/repoid/${id}`);
-        if (data.status !== 200) {
-          toast.error("Something went wrong!");
-          return;
-        }
-        const jsonData = await data.json();
-        setRepo(jsonData);
-      } catch (e) {
-        console.log("error while fetching repo: ", e);
+    if (repoData) {
+      setFormValues({
+        name: repoData.name || "",
+        description: repoData.description || "",
+        visibility: repoData.visibility,
+      });
+    }
+  }, [repoData]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormValues((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleIssueChange = (e) => {
+    const { name, value } = e.target;
+    setIssueValues((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const fetchRepo = async () => {
+    try {
+      const data = await fetch(`http://localhost:5000/repo/repoid/${id}`);
+      if (data.status !== 200) {
+        toast.error("Something went wrong!");
+        return;
       }
-    };
+      const jsonData = await data.json();
+      setRepo(jsonData);
+      setRepoData(jsonData);
+      setCurrRepoId(jsonData._id);
+    } catch (e) {
+      console.log("error while fetching repo: ", e);
+    }
+  };
+
+    useEffect(() => {
+        if (!currRepoId) return;
+        const checkStarred = async () => {
+            const result = await fetch(`http://localhost:5000/user/${currUser}/starRepos`);
+            const data = await result.json();
+            const stared = data.some((repo) => repo._id === currRepoId);
+            setIsStared(stared);
+
+        };
+        checkStarred();
+    }, [currRepoId, currUser]);
+
+  const deleteRepo = async (repoId) => {
+    try {
+        const result = await fetch(`http://localhost:5000/repo/delete/${repoId}`, {method: "DELETE"});
+
+        if(result.status == 200) {
+            toast.success("repo deleted successfully");
+            navigate(`/profile/${currUser}`);
+
+        }
+    } catch(e) {
+        console.log(e);
+        toast.error("something went wrong!");
+    }
+  }
+
+  const saveChanges = async (e) => {
+    e.preventDefault();
+    try {
+        const result = await fetch(`http://localhost:5000/repo/update/${id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(formValues),
+        });
+
+        if (result.status === 200) {
+            toast.success("Repo edited successfully!");
+            await fetchRepo();
+            const modalEl = document.getElementById("staticBackdrop2");
+            const modal = bootstrap.Modal.getInstance(modalEl);
+            modal.hide();
+        } else {
+            toast.error("Update failed!");
+        }
+    } catch (e) {
+        console.log("saveChanges error: ", e);
+        toast.error("Something went wrong!");
+    }
+  };
+
+  const handleStaring = async (repoid) => {
+    if (!isStared) {
+        const result = await fetch(`http://localhost:5000/user/starRepo/${repoid}`, {
+            method: "PUT",
+            body: JSON.stringify({ userId: currUser }),
+            headers: { "Content-Type": "application/json" }
+        });
+        if(result.status == 200) {
+            setIsStared(true);
+            toast.success("repository is stared!");
+        }
+    } else {
+        const result = await fetch(`http://localhost:5000/user/unstarRepo/${repoid}`, {
+            method: "PUT",
+            body: JSON.stringify({ userId: currUser }),
+            headers: { "Content-Type": "application/json" }
+        });
+        if(result.status == 200) {
+            setIsStared(false);
+            toast.success("repository is unstared!");
+        }
+    }
+  }
+
+  const handleIssueSubmit = async (e) => {
+    e.preventDefault();
+    try {
+
+        const data = await fetch(`http://localhost:5000/issue/createIssue/${id}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(issueValues),
+        });
+
+        if (data.status == 201) {
+            toast.success("issue created!");
+            const modalEl = document.getElementById("staticBackdrop3");
+            const modal = bootstrap.Modal.getInstance(modalEl);
+            modal.hide();
+            navigate(`/repo/${id}`);
+
+        } else {
+            toast.error("something went wrong!");
+        }
+
+        setIssueValues({ title: "", description: "", user: currUser });
+
+    } catch(e) {
+        console.log("error occured during repo creation: ", e);
+    }
+  };
+
+  useEffect(() => {
     fetchRepo();
   }, [id]);
 
@@ -33,39 +179,160 @@ function Repo() {
             <>
                 <div className='heading-div'>
                     <span>
-                        <h4>{repo.name}</h4>
+                        <h4 className='mb-0 d-flex flex-column'>
+                            {repo.name}
+                            {currUser && currUser != repo.owner._id ? (
+                                    <Link to={`/profile/${repo.owner._id}`} id="userProfileLink">
+                                        <i style={{marginBottom: "0", fontSize: "10px"}}>@{repo.owner.username}</i>
+                                    </Link>
+                                ) : (
+                                    <></>
+                                )
+                            }
+                        </h4>
                         {repo.visibility ? (
                         <span className="badge text-bg-secondary">public</span>
                         ) : (
                         <span className="badge text-bg-secondary">private</span>
                         )}
                     </span>
+
                     <div className='heading-btns'>
-                        <button className="editBtn">
+                        {repo.owner._id == currUser ? 
+                            (
+                                <>
+                                    <button type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop2">
+                                        <p>
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" transform="rotate(0 0 0)">
+                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M19.3028 3.7801C18.4241 2.90142 16.9995 2.90142 16.1208 3.7801L14.3498 5.5511C14.3442 5.55633 14.3387 5.56166 14.3333 5.5671C14.3279 5.57253 14.3225 5.57803 14.3173 5.58359L5.83373 14.0672C5.57259 14.3283 5.37974 14.6497 5.27221 15.003L4.05205 19.0121C3.9714 19.2771 4.04336 19.565 4.23922 19.7608C4.43508 19.9567 4.72294 20.0287 4.98792 19.948L8.99703 18.7279C9.35035 18.6203 9.67176 18.4275 9.93291 18.1663L20.22 7.87928C21.0986 7.0006 21.0986 5.57598 20.22 4.6973L19.3028 3.7801ZM14.8639 7.15833L6.89439 15.1278C6.80735 15.2149 6.74306 15.322 6.70722 15.4398L5.8965 18.1036L8.56029 17.2928C8.67806 17.257 8.7852 17.1927 8.87225 17.1057L16.8417 9.13619L14.8639 7.15833ZM17.9024 8.07553L19.1593 6.81862C19.4522 6.52572 19.4522 6.05085 19.1593 5.75796L18.2421 4.84076C17.9492 4.54787 17.4743 4.54787 17.1814 4.84076L15.9245 6.09767L17.9024 8.07553Z" className='icon-path'/>
+                                            </svg>
+                                            <span>edit</span>
+                                        </p>
+                                    </button>
+                                    <div class="modal fade" id="staticBackdrop2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content" style={{backgroundColor: "#0c1110", color: "whitesmoke", border: "0.8px solid #808080ac"}}>
+                                                <div class="modal-header py-3 px-4" style={{borderBottom: "0.8px solid #808080ac"}}>
+                                                    <h1 class="modal-title fs-6 fw-bold" id="staticBackdropLabel">Edit Repo</h1>
+                                                </div>
+                                                <div class="modal-body px-4">  
+                                                    <form onSubmit={saveChanges} className="edit-repo-form">
+                                                        <div>
+                                                            <label htmlFor="name">Repository Name</label>
+                                                            <input
+                                                            type="text"
+                                                            id="name"
+                                                            name="name"
+                                                            maxLength={20}
+                                                            value={formValues.name}
+                                                            onChange={handleChange}
+                                                            required
+                                                            />
+                                                            <i style={{color: "#808080", fontSize: "9.5px", textAlign: "right", display: "inline-block", width: "100%"}} >*max 20 characters</i>
+                                                        </div>
+
+                                                        <div>
+                                                            <label htmlFor="description">Description</label>
+                                                            <textarea
+                                                            id="description"
+                                                            name="description"
+                                                            maxLength={100}
+                                                            value={formValues.description}
+                                                            onChange={handleChange}
+                                                            />
+                                                            <i style={{color: "#808080", fontSize: "9.5px", textAlign: "right", display: "inline-block", width: "100%"}} >*max 100 characters</i>
+                                                        </div>
+
+                                                        <div>
+                                                        <label className="visibilityLabel">
+                                                            Visibility <br />
+
+                                                            <div style={{display: "flex", flexDirection: "row", alignItems: "center",  gap: "0.3rem"}}>
+                                                            <input
+                                                                type="radio"
+                                                                name="visibility"
+                                                                checked={formValues.visibility === true}
+                                                                onChange={() =>
+                                                                setFormValues((prev) => ({ ...prev, visibility: true }))
+                                                                }
+                                                            />
+                                                            <div className='mb-0' style={{display: "flex", flexDirection: "column"}}>
+                                                                <p className='mb-0' style={{color: "whitesmoke"}}>Public</p>
+                                                                <p className='mb-0'>Anyone on the internet can see this repository.</p>
+                                                            </div>
+                                                            </div>
+
+                                                            <div style={{display: "flex", flexDirection: "row", alignItems: "center", gap: "0.3rem"}}>
+                                                            <input
+                                                                type="radio"
+                                                                name="visibility"
+                                                                checked={formValues.visibility === false}
+                                                                onChange={() =>
+                                                                setFormValues((prev) => ({ ...prev, visibility: false }))
+                                                                }
+                                                            />
+
+                                                            <div className='mb-0' style={{display: "flex", flexDirection: "column"}}>
+                                                                <p className='mb-0' style={{color: "whitesmoke"}}>Private</p>
+                                                                <p className='mb-0'>You choose who can commit or see this repository.</p>
+                                                            </div>
+                                                            </div>
+                                                        </label>
+                                                        </div>
+
+                                                        <span class="modal-footer px-4" style={{borderTop: "0"}}>
+                                                            <button type="button" class="btn btn-secondary fw-semibold px-3" data-bs-dismiss="modal">Cancel</button>
+                                                            <button type="submit" class="btn fw-semibold px-3" style={{backgroundColor: "green", color: "whitesmoke", border: "1px solid green"}}>Save</button>
+                                                        </span>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <button type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                        <p>
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" transform="rotate(0 0 0)">
+                                                <path d="M14.7223 12.7585C14.7426 12.3448 14.4237 11.9929 14.01 11.9726C13.5963 11.9522 13.2444 12.2711 13.2241 12.6848L12.9999 17.2415C12.9796 17.6552 13.2985 18.0071 13.7122 18.0274C14.1259 18.0478 14.4778 17.7289 14.4981 17.3152L14.7223 12.7585Z" class="icon-path"/>
+                                                <path d="M9.98802 11.9726C9.5743 11.9929 9.25542 12.3448 9.27577 12.7585L9.49993 17.3152C9.52028 17.7289 9.87216 18.0478 10.2859 18.0274C10.6996 18.0071 11.0185 17.6552 10.9981 17.2415L10.774 12.6848C10.7536 12.2711 10.4017 11.9522 9.98802 11.9726Z" class="icon-path"/>
+                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M10.249 2C9.00638 2 7.99902 3.00736 7.99902 4.25V5H5.5C4.25736 5 3.25 6.00736 3.25 7.25C3.25 8.28958 3.95503 9.16449 4.91303 9.42267L5.54076 19.8848C5.61205 21.0729 6.59642 22 7.78672 22H16.2113C17.4016 22 18.386 21.0729 18.4573 19.8848L19.085 9.42267C20.043 9.16449 20.748 8.28958 20.748 7.25C20.748 6.00736 19.7407 5 18.498 5H15.999V4.25C15.999 3.00736 14.9917 2 13.749 2H10.249ZM14.499 5V4.25C14.499 3.83579 14.1632 3.5 13.749 3.5H10.249C9.83481 3.5 9.49902 3.83579 9.49902 4.25V5H14.499ZM5.5 6.5C5.08579 6.5 4.75 6.83579 4.75 7.25C4.75 7.66421 5.08579 8 5.5 8H18.498C18.9123 8 19.248 7.66421 19.248 7.25C19.248 6.83579 18.9123 6.5 18.498 6.5H5.5ZM6.42037 9.5H17.5777L16.96 19.7949C16.9362 20.191 16.6081 20.5 16.2113 20.5H7.78672C7.38995 20.5 7.06183 20.191 7.03807 19.7949L6.42037 9.5Z" class="icon-path"/>
+                                            </svg>
+                                            <span>delete</span>
+                                        </p>
+                                    </button>
+                                    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content" style={{backgroundColor: "#0c1110", color: "whitesmoke", border: "0.8px solid #808080ac"}}>
+                                            <div class="modal-header py-3 px-4" style={{borderBottom: "0.8px solid #808080ac"}}>
+                                                <h1 class="modal-title fs-6 fw-bold" id="staticBackdropLabel">Delete Repo</h1>
+                                            </div>
+                                            <div class="modal-body px-4">
+                                                Are you sure you want to delete your repo?
+                                            </div>
+                                            <div class="modal-footer px-4" style={{borderTop: "0"}}>
+                                                <button type="button" class="btn btn-secondary fw-semibold px-3" data-bs-dismiss="modal">Cancel</button>
+                                                <button type="button" class="btn fw-semibold px-3" data-bs-dismiss="modal" onClick={() => deleteRepo(repo._id)} style={{backgroundColor: "red", color: "whitesmoke", border: "1px solid red"}}>Delete</button>
+                                            </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </>
+                            ) : (<></>)
+                        }
+                        <button className="starBtn" onClick={() => handleStaring(repo._id)}>
                             <p>
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" transform="rotate(0 0 0)">
-                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M19.3028 3.7801C18.4241 2.90142 16.9995 2.90142 16.1208 3.7801L14.3498 5.5511C14.3442 5.55633 14.3387 5.56166 14.3333 5.5671C14.3279 5.57253 14.3225 5.57803 14.3173 5.58359L5.83373 14.0672C5.57259 14.3283 5.37974 14.6497 5.27221 15.003L4.05205 19.0121C3.9714 19.2771 4.04336 19.565 4.23922 19.7608C4.43508 19.9567 4.72294 20.0287 4.98792 19.948L8.99703 18.7279C9.35035 18.6203 9.67176 18.4275 9.93291 18.1663L20.22 7.87928C21.0986 7.0006 21.0986 5.57598 20.22 4.6973L19.3028 3.7801ZM14.8639 7.15833L6.89439 15.1278C6.80735 15.2149 6.74306 15.322 6.70722 15.4398L5.8965 18.1036L8.56029 17.2928C8.67806 17.257 8.7852 17.1927 8.87225 17.1057L16.8417 9.13619L14.8639 7.15833ZM17.9024 8.07553L19.1593 6.81862C19.4522 6.52572 19.4522 6.05085 19.1593 5.75796L18.2421 4.84076C17.9492 4.54787 17.4743 4.54787 17.1814 4.84076L15.9245 6.09767L17.9024 8.07553Z" className='icon-path'/>
-                                </svg>
-                                <span>edit</span>
-                            </p>
-                        </button>
-                        <button className="starBtn">
-                            <p>
-                               <svg width="12" height="12" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg" transform="rotate(0 0 0)">
-                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M11.9996 2.125C12.2851 2.125 12.5459 2.28707 12.6722 2.54308L15.3264 7.9211L21.2614 8.78351C21.5439 8.82456 21.7786 9.02244 21.8669 9.29395C21.9551 9.56546 21.8815 9.86351 21.6771 10.0628L17.3825 14.249L18.3963 20.16C18.4445 20.4414 18.3289 20.7257 18.0979 20.8936C17.867 21.0614 17.5608 21.0835 17.3081 20.9506L11.9996 18.1598L6.69122 20.9506C6.43853 21.0835 6.13233 21.0614 5.90137 20.8936C5.67041 20.7257 5.55475 20.4414 5.603 20.16L6.61682 14.249L2.32222 10.0628C2.11779 9.86351 2.04421 9.56546 2.13243 9.29395C2.22065 9.02244 2.45536 8.82456 2.73788 8.78351L8.67288 7.9211L11.3271 2.54308C11.4534 2.28707 11.7142 2.125 11.9996 2.125ZM11.9996 4.56966L9.84348 8.93853C9.73423 9.15989 9.52306 9.31331 9.27878 9.34881L4.45745 10.0494L7.94619 13.4501C8.12296 13.6224 8.20362 13.8706 8.16189 14.1139L7.33831 18.9158L11.6506 16.6487C11.8691 16.5338 12.1302 16.5338 12.3486 16.6487L16.661 18.9158L15.8374 14.1139C15.7957 13.8706 15.8763 13.6224 16.0531 13.4501L19.5418 10.0494L14.7205 9.34881C14.4762 9.31331 14.2651 9.15989 14.1558 8.93853L11.9996 4.56966Z" className='icon-path'/>
-                               </svg>
+                                {isStared ? (
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" transform="rotate(0 0 0)">
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M7.21481 8.27571L2.21967 3.28057C1.92678 2.98768 1.92678 2.51281 2.21967 2.21991C2.51256 1.92702 2.98744 1.92702 3.28033 2.21991L21.7794 20.7189C22.0722 21.0118 22.0722 21.4867 21.7794 21.7796C21.4865 22.0725 21.0116 22.0725 20.7187 21.7796L18.3107 19.3716L18.3703 19.555C18.4707 19.864 18.3607 20.2026 18.0978 20.3936C17.835 20.5845 17.479 20.5845 17.2161 20.3936L11.9996 16.6035L6.78296 20.3936C6.52009 20.5845 6.16415 20.5845 5.90128 20.3936C5.63841 20.2026 5.52842 19.864 5.62883 19.555L7.62139 13.4226L2.40479 9.63247C2.14193 9.44149 2.03193 9.10297 2.13234 8.79395C2.23275 8.48493 2.52071 8.27571 2.84563 8.27571L7.21481 8.27571ZM15.9744 17.0353L16.2304 17.8233L12.4404 15.0697C12.1775 14.8787 11.8216 14.8787 11.5587 15.0697L7.7687 17.8233L9.21636 13.3678C9.31676 13.0588 9.20677 12.7203 8.9439 12.5293L5.1539 9.77571H8.71481L15.9744 17.0353Z" className='icon-path'/>
+                                        <path d="M18.8452 9.77571L15.3808 12.2927L16.4547 13.3666L21.5943 9.63247C21.8572 9.44149 21.9672 9.10297 21.8668 8.79395C21.7664 8.48493 21.4784 8.27571 21.1535 8.27571L14.7054 8.27571L12.7128 2.14324C12.6124 1.83422 12.3245 1.625 11.9996 1.625C11.6746 1.625 11.3867 1.83422 11.2863 2.14324L9.80136 6.71327L10.9918 7.90368L11.9996 4.80205L13.4472 9.25747C13.5476 9.56649 13.8356 9.77571 14.1605 9.77571H18.8452Z" className='icon-path'/>
+                                    </svg>
+                                ) : (
+                                    <svg width="12" height="12" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg" transform="rotate(0 0 0)">
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M11.9996 2.125C12.2851 2.125 12.5459 2.28707 12.6722 2.54308L15.3264 7.9211L21.2614 8.78351C21.5439 8.82456 21.7786 9.02244 21.8669 9.29395C21.9551 9.56546 21.8815 9.86351 21.6771 10.0628L17.3825 14.249L18.3963 20.16C18.4445 20.4414 18.3289 20.7257 18.0979 20.8936C17.867 21.0614 17.5608 21.0835 17.3081 20.9506L11.9996 18.1598L6.69122 20.9506C6.43853 21.0835 6.13233 21.0614 5.90137 20.8936C5.67041 20.7257 5.55475 20.4414 5.603 20.16L6.61682 14.249L2.32222 10.0628C2.11779 9.86351 2.04421 9.56546 2.13243 9.29395C2.22065 9.02244 2.45536 8.82456 2.73788 8.78351L8.67288 7.9211L11.3271 2.54308C11.4534 2.28707 11.7142 2.125 11.9996 2.125ZM11.9996 4.56966L9.84348 8.93853C9.73423 9.15989 9.52306 9.31331 9.27878 9.34881L4.45745 10.0494L7.94619 13.4501C8.12296 13.6224 8.20362 13.8706 8.16189 14.1139L7.33831 18.9158L11.6506 16.6487C11.8691 16.5338 12.1302 16.5338 12.3486 16.6487L16.661 18.9158L15.8374 14.1139C15.7957 13.8706 15.8763 13.6224 16.0531 13.4501L19.5418 10.0494L14.7205 9.34881C14.4762 9.31331 14.2651 9.15989 14.1558 8.93853L11.9996 4.56966Z" className='icon-path'/>
+                                    </svg>
+                                )}
                                 
-                                <span>star</span>
-                            </p>
-                        </button>
-                        <button className="deleteBtn">
-                            <p>
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" transform="rotate(0 0 0)">
-                                    <path d="M14.7223 12.7585C14.7426 12.3448 14.4237 11.9929 14.01 11.9726C13.5963 11.9522 13.2444 12.2711 13.2241 12.6848L12.9999 17.2415C12.9796 17.6552 13.2985 18.0071 13.7122 18.0274C14.1259 18.0478 14.4778 17.7289 14.4981 17.3152L14.7223 12.7585Z" class="icon-path"/>
-                                    <path d="M9.98802 11.9726C9.5743 11.9929 9.25542 12.3448 9.27577 12.7585L9.49993 17.3152C9.52028 17.7289 9.87216 18.0478 10.2859 18.0274C10.6996 18.0071 11.0185 17.6552 10.9981 17.2415L10.774 12.6848C10.7536 12.2711 10.4017 11.9522 9.98802 11.9726Z" class="icon-path"/>
-                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M10.249 2C9.00638 2 7.99902 3.00736 7.99902 4.25V5H5.5C4.25736 5 3.25 6.00736 3.25 7.25C3.25 8.28958 3.95503 9.16449 4.91303 9.42267L5.54076 19.8848C5.61205 21.0729 6.59642 22 7.78672 22H16.2113C17.4016 22 18.386 21.0729 18.4573 19.8848L19.085 9.42267C20.043 9.16449 20.748 8.28958 20.748 7.25C20.748 6.00736 19.7407 5 18.498 5H15.999V4.25C15.999 3.00736 14.9917 2 13.749 2H10.249ZM14.499 5V4.25C14.499 3.83579 14.1632 3.5 13.749 3.5H10.249C9.83481 3.5 9.49902 3.83579 9.49902 4.25V5H14.499ZM5.5 6.5C5.08579 6.5 4.75 6.83579 4.75 7.25C4.75 7.66421 5.08579 8 5.5 8H18.498C18.9123 8 19.248 7.66421 19.248 7.25C19.248 6.83579 18.9123 6.5 18.498 6.5H5.5ZM6.42037 9.5H17.5777L16.96 19.7949C16.9362 20.191 16.6081 20.5 16.2113 20.5H7.78672C7.38995 20.5 7.06183 20.191 7.03807 19.7949L6.42037 9.5Z" class="icon-path"/>
-                                </svg>
-                                <span>delete</span>
+                                <span>{isStared ? "unstar" : "star"}</span>
                             </p>
                         </button>
                     </div>
@@ -100,10 +367,60 @@ function Repo() {
                                 Tags
                             </p>
                             </div>
+
                             <div>
-                                <button className="submit-btn">
-                                    code
-                                </button>
+                                <div className="d-flex justify-content-start justify-content-md-center">
+                                    <button type="button" className="submit-btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop3">
+                                            <svg width="14" height="14" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg" transform="rotate(0 0 0)">
+                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M9.13354 2.07934C9.50403 1.8941 9.95453 2.04427 10.1398 2.41475L10.6825 3.50024L10.7007 3.50016H13.3466C13.3989 3.50016 13.451 3.50198 13.5027 3.50557L14.0481 2.41475C14.2334 2.04427 14.6839 1.8941 15.0544 2.07934C15.4248 2.26459 15.575 2.71509 15.3898 3.08557L14.8805 4.10404C15.0738 4.28408 15.2369 4.49958 15.359 4.74393L16.238 6.50191C17.4392 6.54884 18.3986 7.53746 18.3986 8.75016V9.48177L19.7955 9.03571C20.1901 8.9097 20.6121 9.12743 20.7381 9.52201C20.8641 9.9166 20.6464 10.3386 20.2518 10.4646L18.3986 11.0564V13.1252H20.0236C20.4379 13.1252 20.7736 13.461 20.7736 13.8752C20.7736 14.2894 20.4379 14.6252 20.0236 14.6252H18.3986V15.6252C18.3986 15.9799 18.3697 16.3279 18.3139 16.6669L20.2518 17.2857C20.6464 17.4117 20.8641 17.8337 20.7381 18.2283C20.6121 18.6229 20.1901 18.8406 19.7955 18.7146L17.8969 18.1083C16.9287 20.3955 14.6636 22.0002 12.0236 22.0002C9.3837 22.0002 7.11855 20.3955 6.15035 18.1083L4.25179 18.7146C3.85721 18.8406 3.43519 18.6229 3.30918 18.2283C3.18318 17.8337 3.40091 17.4117 3.79549 17.2857L5.73333 16.6669C5.67762 16.3279 5.64864 15.9799 5.64864 15.6252V14.6252H4.02364C3.60943 14.6252 3.27364 14.2894 3.27364 13.8752C3.27364 13.461 3.60943 13.1252 4.02364 13.1252H5.64864V11.0564L3.79549 10.4646C3.40091 10.3386 3.18318 9.9166 3.30918 9.52201C3.43519 9.12743 3.85721 8.9097 4.25179 9.03571L5.64864 9.48177V8.75016C5.64864 7.53746 6.60804 6.54884 7.80924 6.50191L8.68823 4.74393C8.83049 4.45942 9.02818 4.21402 9.26443 4.01817L8.79813 3.08557C8.61289 2.71509 8.76306 2.26459 9.13354 2.07934ZM14.5601 6.50016L14.0174 5.41475C13.8904 5.16067 13.6307 5.00016 13.3466 5.00016H10.7007C10.4166 5.00016 10.1569 5.16067 10.0299 5.41475L9.48716 6.50016H14.5601ZM7.89864 8.00016C7.48443 8.00016 7.14864 8.33595 7.14864 8.75016V15.6252C7.14864 18.3176 9.33125 20.5002 12.0236 20.5002C14.716 20.5002 16.8986 18.3176 16.8986 15.6252V8.75016C16.8986 8.33595 16.5629 8.00016 16.1486 8.00016H7.89864Z" className='icon-path'/>
+                                            </svg>
+                                            <span>Issue</span>
+                                    </button>
+                                </div>
+                                <div class="modal fade" id="staticBackdrop3" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content" style={{backgroundColor: "#0c1110", color: "whitesmoke", border: "0.8px solid #808080ac"}}>
+                                            <div class="modal-header py-3 px-4" style={{borderBottom: "0.8px solid #808080ac"}}>
+                                                <h1 class="modal-title fs-6 fw-bold" id="staticBackdropLabel">Create issue</h1>
+                                            </div>
+                                            <div class="modal-body px-4">  
+                                                <form onSubmit={handleIssueSubmit} className="edit-repo-form">
+                                                    <div>
+                                                        <label htmlFor="name">Issue Title</label>
+                                                        <input
+                                                        type="text"
+                                                        id="name"
+                                                        name="title"
+                                                        maxLength={20}
+                                                        value={issueValues.title}
+                                                        onChange={handleIssueChange}
+                                                        required
+                                                        />
+                                                        <i style={{color: "#808080", fontSize: "9.5px", textAlign: "right", display: "inline-block", width: "100%"}} >*max 20 characters</i>
+                                                    </div>
+
+                                                    <div>
+                                                        <label htmlFor="description">Description</label>
+                                                        <textarea
+                                                        id="description"
+                                                        name="description"
+                                                        maxLength={100}
+                                                        rows="5"
+                                                        value={issueValues.description}
+                                                        onChange={handleIssueChange}
+                                                        />
+                                                        <i style={{color: "#808080", fontSize: "9.5px", textAlign: "right", display: "inline-block", width: "100%"}} >*max 100 characters</i>
+                                                    </div>
+
+                                                    <span class="modal-footer p-0" style={{borderTop: "0"}}>
+                                                        <button type="button" class="btn btn-secondary fw-semibold px-4" data-bs-dismiss="modal">Cancel</button>
+                                                        <button type="submit" class="btn fw-semibold px-4" style={{backgroundColor: "green", color: "whitesmoke", border: "1px solid green"}}>Add</button>
+                                                    </span>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div className="files">
@@ -123,6 +440,11 @@ function Repo() {
                             </div>
                             <div></div>
                         </div>
+                        {repo?.updatedAt && (
+                            <p style={{fontSize: "10px", fontWeight: "500", textAlign: "end", marginBottom: "0", marginTop: "-11px", paddingRight: "5px", width: "100%"}}>
+                                Last updated: {new Date(repo.updatedAt).toLocaleString()}
+                            </p>
+                        )}
                     </div>
                     <div className="about">
                         <div>

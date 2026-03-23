@@ -63,6 +63,7 @@ function Signup() {
               className="input"
               type="text"
               value={username}
+              maxLength={20}
               onChange={(e) => setUsername(e.target.value)}
             />
           </div>
@@ -88,6 +89,8 @@ function Signup() {
               id="Password"
               className="input"
               type="password"
+              maxLength={10}
+              minLength={6}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
@@ -104,7 +107,7 @@ function Signup() {
         </div>
 
         <div className="pass-box">
-          <p>
+          <p className="mb-0">
             Already have an account? <Link to="/auth">Login</Link>
           </p>
         </div>

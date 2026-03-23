@@ -30,15 +30,12 @@
     background-color: black;
     border: none;
     border-radius: 8px;
+    padding: 0.5rem;
     color: whitesmoke;
 }
 
 .createRepoForm .firstInput {
     width: 100%;
-}
-
-.createRepoForm input {
-    padding: 0.5rem;
 }
 
 .line {

@@ -11,6 +11,9 @@ dotenv.config();
 import yargs from 'yargs';
 import {hideBin} from 'yargs/helpers';
 
+import { createRouteHandler } from "uploadthing/express";
+import fileRouter from "../src/utils/uploadthing.js";
+
 
 import initRepo from './controllers/terminalCommands/init.js';
 import addRepo from './controllers/terminalCommands/add.js';
@@ -33,6 +36,7 @@ const startServer = () => {
 
     app.use('/', mainRouter);
 
+    app.use("/api/uploadthing", createRouteHandler({ router: fileRouter, config: { secret: process.env.UPLOADTHING_SECRET_KEY }, }));
 
     mongoose.connect(mongoURI)
         .then(() => {console.log("MongoDB connected");})

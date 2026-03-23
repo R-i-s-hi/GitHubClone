@@ -68,8 +68,10 @@ export default function CreateRepoForm() {
                 className="firstInput"
                 value={formData.name}
                 onChange={handleChange}
+                maxLength={20}
                 required
                 />
+                <i style={{color: "#808080", fontSize: "9.5px", textAlign: "right", display: "inline-block", width: "100%"}} >*max 20 characters</i>
             </label>
 
             <label>
@@ -79,8 +81,10 @@ export default function CreateRepoForm() {
                 className="firstInput"
                 value={formData.description}
                 onChange={handleChange}
+                maxLength={100}
                 rows={5}
                 />
+                <i style={{color: "#808080", fontSize: "9.5px", textAlign: "right", display: "inline-block", width: "100%"}} >*max 100 characters</i>
             </label>
 
             <hr className="line"/>

@@ -105,4 +105,13 @@ nav .profile-btn:hover {
   .nav-create-line {
     display: none;
   }
+  nav div {
+    gap: 1rem;
+  }
+}
+
+@media(max-width: 430px) {
+      .dashboard main {
+        padding: 2rem 1.5rem 1.5rem;
+      }
 }

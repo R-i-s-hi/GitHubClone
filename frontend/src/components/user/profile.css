@@ -1,20 +1,20 @@
 .profile-page-wrapper {
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
   gap: 8rem;
   color: whitesmoke;
   width: 100%;
   background-color: #0c1110;
-  padding-inline: 5rem;
+  padding: 1.5rem 5rem;
 }
 
 .user-profile-section {
-  width: 350px;
+  width: 40%;
   display: flex;
   align-items: center;
   flex-direction: column;
-  padding: 40px 10px;
+  padding-inline: 6%;
 }
 
 .user-repo-section {
@@ -24,21 +24,61 @@
 }
 
 .user-name {
-  /* width: 250px; */
   margin: 10px 20px 10px 10px;
-  /* margin: 10px auto; */
 }
 
 .profile-image  {
-  margin: 10px auto;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
   width: 200px;
   height: 200px;
   border-radius: 50%;
-  background-color: grey;
+  background-color: rgba(128, 128, 128, 0.346);
+}
+
+.profile-image img {
+  height: 100%;
+  width: 100%;
+  border-radius: 50%;
+}
+
+.profile-image .edit-btn {
+  display: none;
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  height: 22px;
+  width: 22px;
+  background-color: #019f01;
+  color: whitesmoke;
+  border: none;
+  border-radius: 8px;
+}
+
+.profile-image .edit-btn .icon-path {
+  fill: whitesmoke;
+}
+
+.profile-image:hover .edit-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.img-thumbnail {
+  border: none;
+  background-color: #0c1110;
+  height: 100px !important;
+  width: 100px !important;
+  border-radius: 0 !important;
+  padding: 0;
 }
 
 .underlineNavComponent {
-  padding-left: 2rem !important;
+  padding-inline: 2rem !important;
   padding-block: 0;
   border-bottom: 0.8px solid rgba(128, 128, 128, 0.785);
 }
@@ -51,6 +91,7 @@
   border-radius: 10px;
   border: none;
   color: whitesmoke;
+  font-weight: 500;
 }
 
 .follow-btn:hover {
@@ -61,10 +102,11 @@
 .follower {
   display: flex;
   justify-content: center;
-  width: 250px;
+  width: 100%;
   height: 30px;
   gap: 10px;
-  margin: 10px auto;
+  font-size: small;
+  font-weight: 500;
 }
 
 .repo-card-wrapper {
@@ -100,7 +142,7 @@
 }
 
 .heat-map-section {
-  width: stretch;
+  width: 60%;
   height: stretch;
   display: flex;
   align-items: center;
@@ -150,6 +192,87 @@
   margin-bottom: 2px;
 }
 
+.reposContainer .repos .col .text-bg-success {
+  background-color: #019f01 !important;
+  border: none;
+}
+.reposContainer .repos .col .text-bg-warning {
+  background-color: #ffc107 !important;
+  border: none;
+}
+
+#issue-link {
+  border-bottom: 0.8px solid gray;
+}
+
+#issue-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #8080802f; 
+  padding: 0.5rem 0.8rem; 
+  border-bottom: 0.8px solid #20272d;
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
+}
+
+#issue-header .btns {
+  display: flex;
+  gap: 0.3rem;
+}
+
+#issue-header button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 70px;
+  height: 25px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: gray;
+  background-color: #0c1110;
+  border: 1px solid gray;
+}
+
+#issue-header button .icon-path {
+  fill: gray !important;
+}
+
+#issue-header button:hover {
+  background-color: #6c757d58;
+  color: whitesmoke;
+}
+
+#issue-header button:hover .icon-path {
+  fill: whitesmoke !important;
+}
+
+.reposContainer .issue-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  font-size: 12px;
+  opacity: 0.8;
+  padding: 1rem;
+}
+
+.reposContainer .issue-content .issue-view-btn {
+  width: fit-content;
+  padding-inline: 0.8rem;
+  border-radius: 6px;
+  background-color: inherit;
+  border: 1px solid gray;
+  color: gray;
+  font-size: 11px;
+  font-weight: 500;
+}
+.reposContainer .issue-content .issue-view-btn:hover {
+  background-color: rgba(128, 128, 128, 0.184);
+  color: whitesmoke;
+}
+
+
 .reposContainer .repos .col p {
   opacity: 0.8;
 }
@@ -164,12 +287,99 @@
   margin-bottom: 5px;
 }
 
+.reposContainer .no-issue-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.reposContainer .no-issue-container img {
+  width: 250px;
+}
+
+.reposContainer .no-issue-container p {
+  color: whitesmoke;
+  line-height: 1;
+  font-size: 14px;
+}
+
+.reposContainer .no-issue-container button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  width: 50%;
+  max-width: 160px;
+  background-color: #019f01;
+  border: none;
+  border-radius: 8px;
+  color: whitesmoke;
+  font-size: 14px;
+  padding: 5px 12px 5px 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.reposContainer .no-issue-container button:hover {
+  background-color: #018d01;
+} 
+
+.reposContainer .no-issue-container button .icon-path {
+  fill: whitesmoke;
+}
+
+.reposContainer .no-issue-container button svg {
+  margin-bottom: -3px;
+}
+.sr-only {
+  display: none;
+}
+
+.modal-footer button {
+  font-size: 12px;
+}
+
 @media(max-width: 980px) {
-  .profile-page-wrapper {
-    padding-inline: 1rem;
+  .profile-page-wrapper, .underlineNavComponent {
+    padding-inline: 1rem !important;
   }
   .reposContainer {
     padding-inline: 2rem;
+  }
+  .profile-image {
+    width: 130px;
+    height: 130px;
+  }
+  .profile-image 
+  .user-profile-section {
+    padding-inline: 8%;
+  }
+  .profile-image .edit-btn {
+    right: 9px;
+    top: 9px;
+  }
+  .user-profile-section .name h3 {
+    font-size: 18px;
+  }
+  .follow-btn {
+    height: 35px;
+    font-size: small;
+  }
+  .follower {
+    font-size: 11px;
+  }
+  .follower p {
+    text-align: center;
+    line-height: 1.3;
+  }
+  #issue-header .btns button .issue-btn-text {
+    display: none;
+  }
+  #issue-header button {
+    width: fit-content;
+    padding-inline: 6px;
   }
 }
 
@@ -178,7 +388,7 @@
     width: 100%;
   }
   .profile-page-wrapper {
-    flex-direction: column;
+    gap: 0;
   }
 }
 
@@ -186,8 +396,63 @@
   .user-profile-section {
     margin: auto;
   }
+}
 
+@media(max-width: 550px) {
   .profile-page-wrapper {
-    display: block;
+    flex-direction: column;
+    gap: 1rem;
+    padding-inline: 1.5rem;
+  }
+  .profile-image .edit-btn {
+    top: 3px;
+    right: 3px;
+  }
+  .heat-map-section {
+    width: 100%;
+  }
+  .HeatMapWrapper h4 {
+    font-size: 19px;
+  }
+  .user-profile-section {
+    flex-direction: row;
+    justify-content: start;
+    margin-inline: 0;
+    padding-inline: 0;
+    width: 100%;
+    gap: 3rem;
+  }
+  .user-profile-section .right-element {
+    display: flex !important;
+    flex-direction: column-reverse !important;
+  }
+  .user-profile-section .profile-image {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 3px;
+  }
+  .follower {
+    gap: 3rem;
+  }
+  .follower p {
+    text-align: start;
+    width: 50px;
+  }
+  .HeatMapWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .HeatMapWrapper h4 {
+    width: 100%;
+  }
+}
+
+@media(max-width: 450px) {
+
+  .reposContainer .repos .col p {
+    opacity: 0.8;
+    max-width: 327px;
+    line-height: 1.4;
   }
 }

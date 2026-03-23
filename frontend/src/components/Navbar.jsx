@@ -1,8 +1,13 @@
 import React from 'react'
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import "./navbar.css";
+import { useNavigate } from 'react-router-dom';
 
 function Navbar() {
+
+  const id = localStorage.getItem("userId");
+  const navigate = useNavigate();
+
   return (
     <nav>
       <Link className="navbar-link" to="/">
@@ -37,7 +42,7 @@ function Navbar() {
 
           <ul class="dropdown-menu">
             <li>
-              <Link class="dropdown-item" to="/profile">profile</Link>
+              <Link class="dropdown-item" to={`/profile/${id}`}>profile</Link>
             </li>
             <li>
               <button
@@ -47,7 +52,7 @@ function Navbar() {
                   localStorage.removeItem("userId");
                   setCurrentUser(null);
 
-                  window.location.href = "/auth";
+                  navigate("/auth");
                 }}
               >
                 logout

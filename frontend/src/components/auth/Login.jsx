@@ -76,6 +76,8 @@ function Login() {
               id="Password"
               className="input"
               type="password"
+              maxLength={10}
+              minLength={6}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
@@ -91,7 +93,7 @@ function Login() {
           </Button>
         </div>
         <div className="pass-box">
-          <p>
+          <p className="mb-0">
             New to GitHub? <Link to="/signup">Create an account</Link>
           </p>
         </div>

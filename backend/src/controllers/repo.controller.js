@@ -97,7 +97,7 @@ export const getRepo = async (req, res) => {
 
 export const updateRepoById = async (req, res) => {
   const { id } = req.params;
-  const { content, description } = req.body;
+  const { name ,content, description, visibility } = req.body;
 
   try {
     const repository = await Repository.findById(id);
@@ -105,8 +105,10 @@ export const updateRepoById = async (req, res) => {
       return res.status(404).json({ error: "Repository not found!" });
     }
 
+    repository.name = name;
     repository.content.push(content);
     repository.description = description;
+    repository.visibility = visibility;
 
     const updatedRepository = await repository.save();
 
@@ -151,7 +153,7 @@ export const deleteRepoById = async (req, res) => {
       return res.status(404).json({ error: "Repository not found!" });
     }
 
-    res.json({ message: "Repository deleted successfully!" });
+    res.status(200).json({ message: "Repository deleted successfully!" });
   } catch (err) {
     console.error("Error during deleting repository : ", err.message);
     res.status(500).send("Server error");
