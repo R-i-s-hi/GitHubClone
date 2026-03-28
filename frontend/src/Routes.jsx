@@ -8,7 +8,6 @@ import Login from "./components/auth/Login.jsx";
 import Signup from "./components/auth/Signup.jsx";
 import Form from "./components/repo/Form.jsx";
 import Repo from "./components/repo/repo.jsx";
-import StarRepoPage from "./components/user/StarRepo.jsx";
 
 
 const ProjectRoutes = () => {

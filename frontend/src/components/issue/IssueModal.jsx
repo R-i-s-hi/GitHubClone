@@ -68,7 +68,6 @@ export default function IssueModal({ issue, onClose, type }) {
 
   let modalContent;
   if(type === "details") {
-
     modalContent = (
         <div className="custom-modal-overlay" onClick={onClose}>
           <div className="custom-modal" onClick={(e) => e.stopPropagation()} >
@@ -101,7 +100,6 @@ export default function IssueModal({ issue, onClose, type }) {
           </div>
         </div>
     )
-
   } else if (type === "delete") {
     modalContent = (
         <div className="custom-modal-overlay" onClick={onClose}>

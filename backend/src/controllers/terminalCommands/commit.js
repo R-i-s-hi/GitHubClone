@@ -20,6 +20,10 @@ const commitRepo = async (msg) => {
 
         await fs.writeFile(path.join(commitDir, "commit.json"), JSON.stringify({ id: commitID, message: msg, updatedAt: new Date().toISOString() }));
 
+        for (const file of files) {
+            await fs.unlink(path.join(stagingPath, file));
+        }
+
         console.log(`Commit ${commitID} created with message: "${msg}"`);
 
     } catch (e) {

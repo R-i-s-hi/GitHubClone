@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import User from "../models/user.model.js";
 import Repository from "../models/repo.model.js";
 import Issue from "../models/issue.model.js";
+import { fetchRepoFiles } from "../utils/helper.js";
 
 export const createRepo = async (req, res) => {
   const { owner, name, issues, content, description, visibility } = req.body;
@@ -53,10 +54,15 @@ export const fetchRepoById = async (req, res) => {
   const { id } = req.params;
   try {
     const repository = await Repository.findById(id)
-      .populate("owner")
+      .populate("owner", "_id username email")
       .populate("issues");
 
-    res.status(200).json(repository);
+    const files = await fetchRepoFiles(repository.name);
+
+    res.status(200).json({
+      repository,
+      files,
+    });
   } catch (err) {
     console.error("Error during fetching repository : ", err.message);
     res.status(500).send("Server error");

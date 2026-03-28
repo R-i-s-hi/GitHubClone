@@ -24,10 +24,15 @@ import revertRepo from './controllers/terminalCommands/revert.js';
 
 import mainRouter from './routes/main.routes.js';
 
+const mongoURI = process.env.MONGODB_URI;
+
+    mongoose.connect(mongoURI)
+        .then(() => {console.log("MongoDB connected");})
+        .catch((err) => {console.log("Unable to connect: ", err);})
+
 const startServer = () => {
     const app = express();
     const port = process.env.PORT || 5000;
-    const mongoURI = process.env.MONGODB_URI;
 
     app.use(cors({origin: '*'}));
     app.use(bodyParser.json({limit: '10mb'}));
@@ -37,10 +42,6 @@ const startServer = () => {
     app.use('/', mainRouter);
 
     app.use("/api/uploadthing", createRouteHandler({ router: fileRouter, config: { secret: process.env.UPLOADTHING_SECRET_KEY }, }));
-
-    mongoose.connect(mongoURI)
-        .then(() => {console.log("MongoDB connected");})
-        .catch((err) => {console.log("Unable to connect: ", err);})
 
     const httpServer = http.createServer(app);
     const io = new Server(httpServer, {
@@ -110,10 +111,22 @@ yargs(hideBin(process.argv))
         }
     )
     .command(
-        "push",
+        "push <username> <repoName>",
         "Push the committed changes",
-        {},
-        pushRepo
+        (yargs) => {
+            yargs
+            .positional("username", {
+                describe: "Git username",
+                type: "string"
+            })
+            .positional("repoName", {
+                describe: "Repository name",
+                type: "string"
+            });
+        },
+        (argv) => {
+            pushRepo(argv.username, argv.repoName);
+        }
     )
     .command(
         "pull",

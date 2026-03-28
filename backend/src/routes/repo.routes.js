@@ -9,6 +9,7 @@ import {
     toggleVisById,
     deleteRepoById
 } from '../controllers/repo.controller.js';
+import { fetchFileContent } from '../utils/helper.js';
 
 const repoRouter = express.Router();
 
@@ -20,5 +21,7 @@ repoRouter.get('/repoid/:id', fetchRepoById);
 repoRouter.patch('/toggleVis/:id', toggleVisById);
 repoRouter.put('/update/:id', updateRepoById);
 repoRouter.delete('/delete/:id', deleteRepoById);
+
+repoRouter.post('/:id/files', fetchFileContent);
 
 export default repoRouter;
