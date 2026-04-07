@@ -111,7 +111,7 @@ function Profile() {
     if (repositories && repositories.length > 0) {
       getAllIssues();
     }
-  }, [repositories, issues]);
+  }, [repositories]);
 
   const handleStatus = async (issueStatus, id) => {
     const status = issueStatus === "open" ? "closed" : "open";

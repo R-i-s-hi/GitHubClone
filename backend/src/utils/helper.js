@@ -2,12 +2,21 @@ import { s3, S3_BUCKET } from "../config/aws-config.js";
 import User from "../models/user.model.js";
 import Repository from "../models/repo.model.js";
 
-export const isVerified = async (username, repoName) => {
+export const isUserVerified = async (username) => {
   try {
     const userExists = Boolean(await User.exists({ username }));
+
+    return userExists;
+  } catch (e) {
+    console.error("Error while verifying:", e);
+    return false;
+  }
+};
+export const isRepoVerified = async (repoName) => {
+  try {
     const repoExists = Boolean(await Repository.exists({ name: repoName }));
 
-    return userExists && repoExists;
+    return repoExists;
   } catch (e) {
     console.error("Error while verifying:", e);
     return false;
@@ -19,7 +28,7 @@ export const fetchRepoFiles = async (repoName) => {
   try {
     const params = {
       Bucket: S3_BUCKET,
-      Prefix: `commits/${repoName}/`,
+      Prefix: `${repoName}/`,
     };
 
     const data = await s3.listObjectsV2(params).promise();

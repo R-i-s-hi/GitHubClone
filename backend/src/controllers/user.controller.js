@@ -24,7 +24,7 @@ export const signup = async (req, res) => {
 
     const user = await usersCollection.findOne({ username });
     if (user) {
-      return res.status(400).json({ msg: "User already exists" });
+      return res.status(400).json({ msg: "User already exists. login to your account or select a different username." });
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -48,7 +48,7 @@ export const signup = async (req, res) => {
     );
     res.json({ token, userId: result.insertedId });
   } catch (e) {
-    console.log(`error from signup: ${e}`);
+    res.status(500).json({ error: "Server error" });
   }
 };
 
@@ -272,7 +272,6 @@ export const fetchStarRepos = async (req, res) => {
     const validRepos = repos.filter(Boolean);
 
     res.send(validRepos);
-    console.log(validRepos);
   } catch (err) {
     console.error("Error during fetching:", err.message);
     res.status(500).send("Server error!");

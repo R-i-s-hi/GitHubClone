@@ -1,9 +1,18 @@
+import fsSync from 'fs';
 import fs from 'fs/promises';
 import path from 'path';
 
 const initRepo = async () => {
-    const repoPath = path.resolve(process.cwd(), ".repoGit"); // create only absolute path
-    const commitPath = path.join(repoPath, "commits"); // create both absolute or relative path
+
+    const existingPath = fsSync.existsSync(path.join(process.cwd(), ".repoGit"));
+
+    if (existingPath) {
+        console.warn("Repository already initialized.");
+        return;
+    }
+
+    const repoPath = path.resolve(process.cwd(), ".repoGit");
+    const commitPath = path.join(repoPath, "commits");
 
     try {
         await fs.mkdir(repoPath, { recursive: true });

@@ -16,6 +16,11 @@ export const createRepo = async (req, res) => {
       return res.status(400).json({ error: "Invalid User ID!" });
     }
 
+    const existingRepo = await Repository.findOne({ name });
+    if(existingRepo) {
+      return res.status(400).json({ error: "Repository name already exists. Please choose a different name." });
+    }
+
     const newRepository = new Repository({
       name,
       description,
@@ -33,7 +38,7 @@ export const createRepo = async (req, res) => {
     });
   } catch (err) {
     console.error("Error during repository creation : ", err.message);
-    res.status(500).send("Server error");
+    res.status(500).json({ error: "Server error" });
   }
 };
 
@@ -84,7 +89,6 @@ export const fetchRepoByName = async (req, res) => {
 };
 
 export const getRepo = async (req, res) => {
-  console.log(req.params);
   const { userId } = req.params;
 
   try {
@@ -93,7 +97,7 @@ export const getRepo = async (req, res) => {
     if (!repositories || repositories.length == 0) {
       return res.status(404).json({ error: "User Repositories not found!" });
     }
-    console.log(repositories);
+
     res.json({ message: "Repositories found!", repositories });
   } catch (err) {
     console.error("Error during fetching user repositories : ", err.message);

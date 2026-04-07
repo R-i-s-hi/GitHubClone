@@ -7,6 +7,7 @@ import "./auth.css";
 
 import logo from "../../assets/github-mark-white.svg";
 import { Link } from "react-router-dom";
+import {toast} from "react-hot-toast";
 
 function Signup() {
 
@@ -28,6 +29,10 @@ function Signup() {
         username: username,
       });
 
+      if(res.status === 400) {
+        toast.error(jsonRes.msg);
+      }
+
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("userId", res.data.userId);
 
@@ -35,9 +40,11 @@ function Signup() {
       setLoading(false);
 
       window.location.href = "/";
+      toast.success("user signed up successfully!");
     } catch (err) {
       console.error(err);
-      alert("Signup Failed!");
+
+      toast.error("Signup Failed!");
       setLoading(false);
     }
   };

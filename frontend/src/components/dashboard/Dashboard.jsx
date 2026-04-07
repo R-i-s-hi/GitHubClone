@@ -37,7 +37,6 @@ function Dashboard() {
         const response = await fetch(`http://localhost:5000/repo/allrepos`);
         const data = await response.json();
         setSuggestedRepositories(data);
-        console.log(suggestedRepositories);
       } catch (err) {
         console.error("Error while fecthing repositories: ", err);
       }

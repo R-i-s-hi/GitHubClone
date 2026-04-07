@@ -31,6 +31,10 @@ function Login() {
         password: password,
       });
 
+      if(res.status === 400) {
+        toast.error(jsonRes.message);
+      }
+
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("userId", res.data.userId);
 
@@ -38,9 +42,10 @@ function Login() {
       setLoading(false);
 
       window.location.href = "/";
+      toast.success("user logged in successfully!");
     } catch (err) {
       console.error(err);
-      alert("Login Failed!");
+      toast.error("Login Failed!");
       setLoading(false);
     }
   };

@@ -34,11 +34,13 @@ export default function CreateRepoForm() {
             body: JSON.stringify(formData),
         });
 
+        const jsonData = await data.json();
+
         if (data.status == 201) {
             toast.success("repository created!");
             navigate("/");
         } else {
-            toast.error("something went wrong!");
+            toast.error(jsonData.error || "Error creating repository. Please try again.");
         }
 
         setFormData({owner: "", name: "", description: "", visibility: true});

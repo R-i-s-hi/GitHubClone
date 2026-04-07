@@ -1,34 +1,42 @@
-import fs from 'fs/promises'
-import path from 'path'
-import {v4 as uuidv4} from 'uuid'
+import fs from 'fs/promises';
+import path from 'path';
+import { v4 as uuidv4 } from 'uuid';
 
 const commitRepo = async (msg) => {
-    const repoPath = path.resolve(process.cwd(), '.repoGit');
-    const stagingPath = path.join(repoPath, 'staging');
-    const commitsPath = path.join(repoPath, 'commits');
+  const repoPath = path.resolve(process.cwd(), '.repoGit');
+  const stagingPath = path.join(repoPath, 'staging');
+  const commitsPath = path.join(repoPath, 'commits');
 
-    try {
-        
-        const commitID = uuidv4();
-        const commitDir = path.join(commitsPath, commitID);
-        await fs.mkdir(commitDir, {recursive: true});
+  try {
+    const commitID = uuidv4();
+    const commitDir = path.join(commitsPath, commitID);
+    await fs.mkdir(commitDir, { recursive: true });
 
-        const files = await fs.readdir(stagingPath);
-        for(const file of files) {
-            await fs.copyFile(path.join(stagingPath, file), path.join(commitDir, file));
-        }
+    const files = await fs.readdir(stagingPath);
+    const filePath = path.join(commitDir, 'commit.json');
 
-        await fs.writeFile(path.join(commitDir, "commit.json"), JSON.stringify({ id: commitID, message: msg, updatedAt: new Date().toISOString() }));
+    const metadata = {
+      id: commitID,
+      operation: 'commit',
+      message: msg,
+      updatedAt: new Date().toISOString(),
+      OperationFiles: files,
+    };
 
-        for (const file of files) {
-            await fs.unlink(path.join(stagingPath, file));
-        }
+    await fs.writeFile(filePath, JSON.stringify([metadata], null, 2));
 
-        console.log(`Commit ${commitID} created with message: "${msg}"`);
-
-    } catch (e) {
-        console.log("Error committing files:", e);
+    for (const file of files) {
+      await fs.copyFile(path.join(stagingPath, file), path.join(commitDir, file));
     }
-}
+
+    for (const file of files) {
+      await fs.unlink(path.join(stagingPath, file));
+    }
+
+    console.log(`Commit ${commitID} created with message: "${msg}"`);
+  } catch (e) {
+    console.error('Error committing files:', e);
+  }
+};
 
 export default commitRepo;
