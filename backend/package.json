@@ -4,7 +4,7 @@
   "description": "Git Clone Backend Service",
   "main": "src/index.js",
   "scripts": {
-    "start": "node src/index.js"
+    "dev": "nodemon src/index.js -- start"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +20,7 @@
     "jsonwebtoken": "^9.0.3",
     "mongodb": "^7.1.0",
     "mongoose": "^9.1.5",
+    "nodemon": "^3.1.14",
     "socket.io": "^4.8.3",
     "uploadthing": "^7.7.4",
     "uuid": "^13.0.0",

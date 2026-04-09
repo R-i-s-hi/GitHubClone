@@ -23,12 +23,7 @@ import pullRepo from './controllers/terminalCommands/pull.js';
 import revertRepo from './controllers/terminalCommands/revert.js';
 
 import mainRouter from './routes/main.routes.js';
-
-const mongoURI = process.env.MONGODB_URI;
-
-    mongoose.connect(mongoURI)
-        .then(() => {console.log("MongoDB connected");})
-        .catch((err) => {console.log("Unable to connect: ", err);})
+import { connectDB } from './config/db-config.js';
 
 const startServer = () => {
     const app = express();
@@ -76,7 +71,10 @@ yargs(hideBin(process.argv))
         "start",
         "Starts a new backend server",
         {},
-        startServer
+        async () => {
+            await connectDB();
+            startServer();
+        }
     )
     .command(
         "init",
@@ -124,7 +122,8 @@ yargs(hideBin(process.argv))
                 type: "string"
             });
         },
-        (argv) => {
+        async (argv) => {
+            await connectDB();
             pushRepo(argv.username, argv.repoName);
         }
     )
@@ -147,7 +146,8 @@ yargs(hideBin(process.argv))
                 type: 'string'
             });
         },
-        (argv) => {
+        async (argv) => {
+            await connectDB();
             revertRepo(argv.commitID, argv.reponame);
         }
     )
