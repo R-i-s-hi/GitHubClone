@@ -43,7 +43,7 @@
     text-decoration-color: #0d6efd;
 }
 
-.heading-btns button p {
+#editFileBtn p, .heading-btns button p {
     margin-bottom: 0;
     display: flex;
     align-items: center;
@@ -127,12 +127,12 @@
     width: 100%;
 }
 
-.heading-btns button, .repo-files-div .repo-files .branch button {
+.heading-btns button, .repo-files-div .repo-files .branch button, #editFileBtn {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 70px;
-    height: 25px;
+    width: 85px;
+    height: 28px;
     border-radius: 8px;
     font-size: 12px;
     font-weight: 500;
@@ -157,20 +157,20 @@
     font-size: 12px;
 }
 
-.heading-btns button:hover,  .repo-files-div .repo-files .branch button:hover {
+#editFileBtn:hover, .heading-btns button:hover,  .repo-files-div .repo-files .branch button:hover {
     background-color: rgba(128, 128, 128, 0.184);
     color: whitesmoke;
 }
 
-.heading-btns button:hover .heading-btns button svg path {
+#editFileBtn:hover #editFileBtn p svg path, .heading-btns button:hover .heading-btns button svg path {
     color: whitesmoke !important;
 }
 
-.heading-btns button .icon-path, .repo-files-div .repo-files .branch .icon-path {
+#editFileBtn .icon-path, .heading-btns button .icon-path, .repo-files-div .repo-files .branch .icon-path {
   fill: #808080;
 }
 
-.heading-btns button:hover .icon-path {
+#editFileBtn:hover .icon-path, .heading-btns button:hover .icon-path {
   fill: whitesmoke;
 }
 
@@ -308,6 +308,28 @@ td {
     text-decoration-color: rgb(15, 15, 238);
 }
 
+#editFileModal .modal-footer button {
+    height: 28px !important;
+    width: 85px;
+    align-content: center;
+    padding: unset;
+    
+}
+
+#editFileModal .modal-footer .cancel {
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    color: gray;
+    background-color: #0c1110;
+    border: 1px solid gray;
+}
+
+#editFileModal .modal-footer .cancel:hover {
+    background-color: rgba(128, 128, 128, 0.184);
+    color: whitesmoke;
+}
+
 @media(max-width: 1280px) {
     .repo-div {
         padding-inline: 3rem;
@@ -330,11 +352,11 @@ td {
         width: 100% !important;
     }
 
-    .heading-btns span {
+    #editFileBtn span, .heading-btns span {
         display: none;
     }
 
-    .heading-btns button {
+    #editFileBtn, .heading-btns button {
         width: fit-content;
         padding-inline: 7px;
     }

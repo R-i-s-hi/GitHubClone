@@ -11,6 +11,7 @@ dotenv.config();
 import yargs from 'yargs';
 import {hideBin} from 'yargs/helpers';
 
+
 import { createRouteHandler } from "uploadthing/express";
 import fileRouter from "../src/utils/uploadthing.js";
 
@@ -22,8 +23,10 @@ import pushRepo from './controllers/terminalCommands/push.js';
 import pullRepo from './controllers/terminalCommands/pull.js';
 import revertRepo from './controllers/terminalCommands/revert.js';
 
+
 import mainRouter from './routes/main.routes.js';
 import { connectDB } from './config/db-config.js';
+
 
 const startServer = () => {
     const app = express();
@@ -35,7 +38,6 @@ const startServer = () => {
     app.use(express.json());
 
     app.use('/', mainRouter);
-
     app.use("/api/uploadthing", createRouteHandler({ router: fileRouter, config: { secret: process.env.UPLOADTHING_SECRET_KEY }, }));
 
     const httpServer = http.createServer(app);

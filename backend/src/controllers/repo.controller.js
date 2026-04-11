@@ -1,8 +1,6 @@
 import mongoose from "mongoose";
-import User from "../models/user.model.js";
 import Repository from "../models/repo.model.js";
-import Issue from "../models/issue.model.js";
-import { fetchRepoFiles } from "../utils/helper.js";
+import { fetchRepoFiles } from "../controllers/files.controller.js";
 
 export const createRepo = async (req, res) => {
   const { owner, name, issues, content, description, visibility } = req.body;

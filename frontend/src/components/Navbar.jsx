@@ -2,6 +2,7 @@ import React from 'react'
 import { Link, useParams } from "react-router-dom";
 import "./navbar.css";
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 function Navbar() {
 
@@ -50,9 +51,9 @@ function Navbar() {
                 onClick={() => {
                   localStorage.removeItem("token");
                   localStorage.removeItem("userId");
-                  setCurrentUser(null);
 
-                  navigate("/auth");
+                  navigate("/auth", {replace: true});
+                  toast.success("Logged out successfully!");
                 }}
               >
                 logout

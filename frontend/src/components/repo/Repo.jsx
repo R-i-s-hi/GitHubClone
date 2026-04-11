@@ -32,7 +32,7 @@ function Repo() {
 
     const handleFileClick = async (file) => {
         setSelectedFile(file.fileName);
-        const content = await fetch(`http://localhost:5000/repo/${id}/files`, {
+        const content = await fetch(`http://localhost:5000/file/content`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -44,6 +44,30 @@ function Repo() {
         setFileContent(data.content);
     };
 
+    const handleFileUpdateClick = async (e) => {
+        e.preventDefault();
+        const res = await fetch(`http://localhost:5000/file/update/${repo.name}/${selectedFile}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ content: fileContent })
+        })
+
+        if (res.status === 200) {
+            toast.success("File updated successfully!");
+            const modalEl = document.getElementById("editFileModal");
+            const modal = bootstrap.Modal.getInstance(modalEl);
+            modal.hide();
+            return;
+        }
+
+        toast.error("Failed to update file!");
+    }
+
+    const handleFileContentChange = (e) => {
+        setFileContent(e.target.value);
+    };
 
     useEffect(() => {
         if (repoData) {
@@ -303,7 +327,7 @@ function Repo() {
 
                                                                 <span class="modal-footer px-4" style={{ borderTop: "0" }}>
                                                                     <button type="button" class="btn btn-secondary fw-semibold px-3" data-bs-dismiss="modal">Cancel</button>
-                                                                    <button type="submit" class="btn fw-semibold px-3" style={{ backgroundColor: "green", color: "whitesmoke", border: "1px solid green" }}>Save</button>
+                                                                    <button type="submit" class="btn fw-semibold px-4" style={{ backgroundColor: "green", color: "whitesmoke", border: "1px solid green" }}>Save</button>
                                                                 </span>
                                                             </form>
                                                         </div>
@@ -454,7 +478,50 @@ function Repo() {
                                                 <p className='mb-0'>Files</p>
                                             )}
                                         </div>
-                                        <div className='right'>
+                                        {fileContent && fileContent.length > 0 && selectedFile.length > 0 ? (
+                                            <>
+                                                <button id='editFileBtn' type="button" data-bs-toggle="modal" data-bs-target="#editFileModal">
+                                                    <p className='mb-0'>
+                                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" transform="rotate(0 0 0)">
+                                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M19.3028 3.7801C18.4241 2.90142 16.9995 2.90142 16.1208 3.7801L14.3498 5.5511C14.3442 5.55633 14.3387 5.56166 14.3333 5.5671C14.3279 5.57253 14.3225 5.57803 14.3173 5.58359L5.83373 14.0672C5.57259 14.3283 5.37974 14.6497 5.27221 15.003L4.05205 19.0121C3.9714 19.2771 4.04336 19.565 4.23922 19.7608C4.43508 19.9567 4.72294 20.0287 4.98792 19.948L8.99703 18.7279C9.35035 18.6203 9.67176 18.4275 9.93291 18.1663L20.22 7.87928C21.0986 7.0006 21.0986 5.57598 20.22 4.6973L19.3028 3.7801ZM14.8639 7.15833L6.89439 15.1278C6.80735 15.2149 6.74306 15.322 6.70722 15.4398L5.8965 18.1036L8.56029 17.2928C8.67806 17.257 8.7852 17.1927 8.87225 17.1057L16.8417 9.13619L14.8639 7.15833ZM17.9024 8.07553L19.1593 6.81862C19.4522 6.52572 19.4522 6.05085 19.1593 5.75796L18.2421 4.84076C17.9492 4.54787 17.4743 4.54787 17.1814 4.84076L15.9245 6.09767L17.9024 8.07553Z" className='icon-path' />
+                                                        </svg>
+                                                        <span>edit</span>
+                                                    </p>
+                                                </button>
+                                                <div class="modal fade" id="editFileModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                                    <div class="modal-dialog modal-dialog-centered">
+                                                        <div class="modal-content" style={{ backgroundColor: "#0c1110", color: "whitesmoke", border: "0.8px solid #808080ac" }}>
+                                                            <div class="modal-header py-3 px-4" style={{ borderBottom: "0.8px solid #808080ac" }}>
+                                                                <h1 class="modal-title fs-6 fw-bold" id="staticBackdropLabel">Edit {selectedFile}</h1>
+                                                            </div>
+                                                            <div class="modal-body px-4">
+                                                                <form onSubmit={handleFileUpdateClick} className="edit-repo-form">
+
+                                                                    <div>
+                                                                        <label htmlFor="description">Content</label>
+                                                                        <textarea
+                                                                            id="description"
+                                                                            name="description"
+                                                                            rows={10}
+                                                                            maxLength={1000}
+                                                                            value={fileContent}
+                                                                            onChange={handleFileContentChange}
+                                                                        />
+                                                                        <i style={{ color: "#808080", fontSize: "9.5px", textAlign: "right", display: "inline-block", width: "100%" }} >*max 1000 characters</i>
+                                                                    </div>
+
+                                                                    <span class="modal-footer" style={{ borderTop: "0", paddingRight: "0" }}>
+                                                                        <button type="button" class="btn btn-secondary fw-semibold px-3 cancel" data-bs-dismiss="modal">Cancel</button>
+                                                                        <button type="submit" class="btn fw-semibold px-3" style={{ backgroundColor: "green", color: "whitesmoke", border: "1px solid green" }}>Save</button>
+                                                                    </span>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </>
+                                        ): (
+                                            <div className='right'>
                                             <p className='mb-0'>
                                                 <svg width="17" height="17" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg" transform="rotate(0 0 0)">
                                                     <path d="M3.13644 9.54175C3.02923 9.94185 3.26667 10.3531 3.66676 10.4603C4.06687 10.5675 4.47812 10.3301 4.58533 9.92998C5.04109 8.22904 6.04538 6.72602 7.44243 5.65403C8.83948 4.58203 10.5512 4.00098 12.3122 4.00098C14.0731 4.00098 15.7848 4.58203 17.1819 5.65403C18.3999 6.58866 19.3194 7.85095 19.8371 9.28639L18.162 8.34314C17.801 8.1399 17.3437 8.26774 17.1405 8.62867C16.9372 8.98959 17.0651 9.44694 17.426 9.65017L20.5067 11.3849C20.68 11.4825 20.885 11.5072 21.0766 11.4537C21.2682 11.4001 21.4306 11.2727 21.5282 11.0993L23.2629 8.01828C23.4661 7.65734 23.3382 7.2 22.9773 6.99679C22.6163 6.79358 22.159 6.92145 21.9558 7.28239L21.195 8.63372C20.5715 6.98861 19.5007 5.54258 18.095 4.464C16.436 3.19099 14.4033 2.50098 12.3122 2.50098C10.221 2.50098 8.1883 3.19099 6.52928 4.464C4.87027 5.737 3.67766 7.52186 3.13644 9.54175Z" fill="#f1f6fd" />
@@ -463,6 +530,7 @@ function Repo() {
                                                 commits
                                             </p>
                                         </div>
+                                        )}
                                     </div>
 
                                     {files && files.length > 0 ? (
@@ -474,7 +542,7 @@ function Repo() {
                                                             <path d="M3.57813 12.4981C3.5777 12.6905 3.65086 12.8831 3.79761 13.0299L9.7936 19.0301C10.0864 19.3231 10.5613 19.3233 10.8543 19.0305C11.1473 18.7377 11.1474 18.2629 10.8546 17.9699L6.13418 13.2461L20.3295 13.2461C20.7437 13.2461 21.0795 12.9103 21.0795 12.4961C21.0795 12.0819 20.7437 11.7461 20.3295 11.7461L6.14168 11.7461L10.8546 7.03016C11.1474 6.73718 11.1473 6.2623 10.8543 5.9695C10.5613 5.6767 10.0864 5.67685 9.79362 5.96984L3.84392 11.9233C3.68134 12.0609 3.57812 12.2664 3.57812 12.4961L3.57813 12.4981Z" fill="#fff" />
                                                         </svg>
                                                     </button>
-                                                    <div style={{ height: "349.6px", color: "#f5f5f5e2", borderLeft: "0.8px solid #8080802f", padding: "1rem", fontSize: "12px", fontWeight: "500" }}>
+                                                    <div style={{ height: "349.6px", color: "#f5f5f5e2", borderLeft: "0.8px solid #8080802f", padding: "1rem", fontSize: "12px", fontWeight: "500", overflowY: "auto" }}>
                                                         {fileContent}
                                                     </div>
                                                 </div>

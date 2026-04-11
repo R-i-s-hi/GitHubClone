@@ -8,6 +8,7 @@ import "./auth.css";
 import logo from "../../assets/github-mark-white.svg";
 import { Link } from "react-router-dom";
 
+import { toast } from "react-hot-toast";
 function Login() {
 
   // useEffect(() => {
@@ -26,12 +27,11 @@ function Login() {
 
     try {
       setLoading(true);
-      const res = await axios.post("http://localhost:5000/user/login", {
-        email: email,
-        password: password,
-      });
+      const res = await axios.post("http://localhost:5000/user/login", { email: email, password: password }, { headers: { "Content-Type": "application/json" } });
 
       if(res.status === 400) {
+        setEmail("");
+        setPassword("");
         toast.error(jsonRes.message);
       }
 
@@ -44,6 +44,8 @@ function Login() {
       window.location.href = "/";
       toast.success("user logged in successfully!");
     } catch (err) {
+      setEmail("");
+    setPassword("");
       console.error(err);
       toast.error("Login Failed!");
       setLoading(false);
