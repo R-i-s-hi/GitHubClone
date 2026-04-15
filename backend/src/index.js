@@ -130,10 +130,18 @@ yargs(hideBin(process.argv))
         }
     )
     .command(
-        "pull",
+        "pull <repoName>",
         "Pull the latest changes",
-        {},
-        pullRepo
+        (yargs) => {
+            yargs.positional('repoName', {
+                describe: "Repository name",
+                type: "string"
+            });
+        },
+        async (argv) => {
+            await connectDB();
+            pullRepo(argv.repoName);
+        }
     )
     .command(
         "revert <commitID> <reponame>",

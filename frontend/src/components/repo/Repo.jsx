@@ -13,6 +13,11 @@ function Repo() {
     const [files, setFiles] = useState([]);
     const [selectedFile, setSelectedFile] = useState("");
     const [fileContent, setFileContent] = useState("");
+    const [toBeFileContent, setToBeFileContent] = useState("");
+    const [commitName, setCommitName] = useState("");
+    const [userPassword, setUserPassword] = useState("");
+    const [lastUpdated, setLastUpdated] = useState("");
+    const [commitMsg, setCommitMsg] = useState("");
 
     const currUser = localStorage.getItem("userId");
     const navigate = useNavigate();
@@ -42,32 +47,67 @@ function Repo() {
 
         const data = await content.json();
         setFileContent(data.content);
+        setToBeFileContent(data.content);
     };
 
-    const handleFileUpdateClick = async (e) => {
-        e.preventDefault();
-        const res = await fetch(`http://localhost:5000/file/update/${repo.name}/${selectedFile}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ content: fileContent })
-        })
+    const handlePassModalOpen = () => {
+        if (fileContent === toBeFileContent) {
+            toast.error("No changes made to the file!")
+        } else {
+            const modal2 = document.getElementById("editFileModal");
+            const editModal = bootstrap.Modal.getInstance(modal2);
+            if (editModal) editModal.hide();
 
-        if (res.status === 200) {
-            toast.success("File updated successfully!");
-            const modalEl = document.getElementById("editFileModal");
-            const modal = bootstrap.Modal.getInstance(modalEl);
-            modal.hide();
+            const modal = new bootstrap.Modal(document.getElementById("PasswordModal"));
+            modal.show();
+        }
+    }
+
+    const handleConfirmFileUpdateClick = async (e) => {
+        e.preventDefault()
+        if (!commitName || !userPassword) {
+            toast.error("Please fill in all fields!");
             return;
         }
+        if(toBeFileContent !== fileContent) {
+            setFileContent(toBeFileContent);
+        }
 
-        toast.error("Failed to update file!");
+        try {
+            const res = await fetch(`http://localhost:5000/file/update/${repo.name}/${selectedFile}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ content: toBeFileContent, commitName: commitName, password: userPassword, userId: currUser })
+            });
+        
+            if (res.status === 200) toast.success("File updated successfully!")
+            if (res.status === 401) toast.error("Invalid password!")
+                
+        } catch (e) {
+            toast.error("Failed to update file!");
+        } finally {
+            setCommitName("");
+            setUserPassword("");
+            const modalEl = document.getElementById("PasswordModal");
+            const modal = bootstrap.Modal.getInstance(modalEl);
+            modal.hide();
+        }
+    
     }
 
     const handleFileContentChange = (e) => {
-        setFileContent(e.target.value);
+        setToBeFileContent(e.target.value);
     };
+
+    const handleCommitNameChange = (e) => {
+        setCommitName(e.target.value);
+    }
+
+    const handlePasswordChange = (e) => {
+        setUserPassword(e.target.value);
+    }
 
     useEffect(() => {
         if (repoData) {
@@ -102,6 +142,8 @@ function Repo() {
             setRepoData(jsonData.repository);
             setCurrRepoId(jsonData.repository._id);
             setFiles(jsonData.files);
+            setLastUpdated(jsonData.lastUpdated);
+            setCommitMsg(jsonData.commitMsg);
         } catch (e) {
             console.log("error while fetching repo: ", e);
         }
@@ -495,7 +537,7 @@ function Repo() {
                                                                 <h1 class="modal-title fs-6 fw-bold" id="staticBackdropLabel">Edit {selectedFile}</h1>
                                                             </div>
                                                             <div class="modal-body px-4">
-                                                                <form onSubmit={handleFileUpdateClick} className="edit-repo-form">
+                                                                <form className="edit-repo-form">
 
                                                                     <div>
                                                                         <label htmlFor="description">Content</label>
@@ -504,11 +546,46 @@ function Repo() {
                                                                             name="description"
                                                                             rows={10}
                                                                             maxLength={1000}
-                                                                            value={fileContent}
+                                                                            value={toBeFileContent}
                                                                             onChange={handleFileContentChange}
                                                                         />
                                                                         <i style={{ color: "#808080", fontSize: "9.5px", textAlign: "right", display: "inline-block", width: "100%" }} >*max 1000 characters</i>
                                                                     </div>
+
+                                                                    <span class="modal-footer" style={{ borderTop: "0", paddingRight: "0" }}>
+                                                                        <button type="button" class="btn btn-secondary fw-semibold px-3 cancel" data-bs-dismiss="modal" onClick={ () => setToBeFileContent(fileContent)}>Cancel</button>
+                                                                        <button type="button" class="btn fw-semibold px-3" id='editFileBtn' style={{ backgroundColor: "green", color: "whitesmoke", border: "1px solid green" }} onClick={handlePassModalOpen}>Save</button>
+                                                                    </span>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal fade" id="PasswordModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                                    <div class="modal-dialog modal-dialog-centered">
+                                                        <div class="modal-content" style={{ backgroundColor: "#0c1110", color: "whitesmoke", border: "0.8px solid #808080ac" }}>
+                                                            <div class="modal-header py-3 px-4" style={{ borderBottom: "0.8px solid #808080ac" }}>
+                                                                <h1 class="modal-title fs-6 fw-bold" id="staticBackdropLabel">Password Verification</h1>
+                                                            </div>
+                                                            <div class="modal-body px-4">
+                                                                <form onSubmit={handleConfirmFileUpdateClick} className="edit-repo-form">
+
+                                                                    <input
+                                                                     type="text"
+                                                                     maxLength={40}
+                                                                     placeholder='Enter commit name'
+                                                                     value={commitName}
+                                                                     onChange={handleCommitNameChange}
+                                                                     style={{ backgroundColor: "black", padding: "4px 8px", fontSize: "13.5px", color: "whitesmoke", border: "0.8px solid #808080ac", borderRadius: "6px" }}
+                                                                    />
+                                                                    <input
+                                                                     type="password"
+                                                                     minLength={6}
+                                                                     placeholder='Enter your password'
+                                                                     value={userPassword}
+                                                                     onChange={handlePasswordChange}
+                                                                     style={{ backgroundColor: "black", padding: "4px 8px", fontSize: "13.5px", color: "whitesmoke", border: "0.8px solid #808080ac", borderRadius: "6px" }}
+                                                                    />
 
                                                                     <span class="modal-footer" style={{ borderTop: "0", paddingRight: "0" }}>
                                                                         <button type="button" class="btn btn-secondary fw-semibold px-3 cancel" data-bs-dismiss="modal">Cancel</button>
@@ -529,7 +606,7 @@ function Repo() {
                                                 </svg>
                                                 commits
                                             </p>
-                                        </div>
+                                            </div>
                                         )}
                                     </div>
 
@@ -542,7 +619,7 @@ function Repo() {
                                                             <path d="M3.57813 12.4981C3.5777 12.6905 3.65086 12.8831 3.79761 13.0299L9.7936 19.0301C10.0864 19.3231 10.5613 19.3233 10.8543 19.0305C11.1473 18.7377 11.1474 18.2629 10.8546 17.9699L6.13418 13.2461L20.3295 13.2461C20.7437 13.2461 21.0795 12.9103 21.0795 12.4961C21.0795 12.0819 20.7437 11.7461 20.3295 11.7461L6.14168 11.7461L10.8546 7.03016C11.1474 6.73718 11.1473 6.2623 10.8543 5.9695C10.5613 5.6767 10.0864 5.67685 9.79362 5.96984L3.84392 11.9233C3.68134 12.0609 3.57812 12.2664 3.57812 12.4961L3.57813 12.4981Z" fill="#fff" />
                                                         </svg>
                                                     </button>
-                                                    <div style={{ height: "349.6px", color: "#f5f5f5e2", borderLeft: "0.8px solid #8080802f", padding: "1rem", fontSize: "12px", fontWeight: "500", overflowY: "auto" }}>
+                                                    <div style={{ height: "341.6px", color: "#f5f5f5e2", borderLeft: "0.8px solid #8080802f", padding: "1rem", fontSize: "12px", fontWeight: "500", overflowY: "auto" }}>
                                                         {fileContent}
                                                     </div>
                                                 </div>
@@ -551,7 +628,7 @@ function Repo() {
                                                 <table class="table table-hover">
                                                     <tbody>
                                                         {files.map((file) => (
-                                                            <tr className="d-flex w-100 justify-content-between" key={file.filename}>
+                                                            <tr className="d-flex w-100 justify-content-between" key={file.fileName}>
                                                                 <th scope="row">
                                                                     <span type="button" id="fileBtn" onClick={() => handleFileClick(file)}>
                                                                         <svg width="14" height="13" viewBox="0 0 18 20" fill="none" xmlns="http://www.w3.org/2000/svg" transform="rotate(0 0 0)">
@@ -561,11 +638,11 @@ function Repo() {
                                                                         {file.fileName}
                                                                     </span>
                                                                 </th>
+                                                                <td style={{textAlign: "right"}}>
+                                                                    <span className="pl-0 pl-md-5">{commitMsg}</span>
+                                                                </td>
                                                                 <td>
-                                                                    <div className="d-flex justify-content-between">
-                                                                        <span className="pl-0 pl-md-5">{file.size}&nbsp;kb</span>
-                                                                        <span>{new Date(file.lastModified).toISOString().split("T")[0]}</span>
-                                                                    </div>
+                                                                    <span>{new Date(file.lastModified).toISOString().split("T")[0]}</span>
                                                                 </td>
                                                             </tr>
                                                         ))}
@@ -574,15 +651,17 @@ function Repo() {
                                             )}
                                         </div>
                                     ) : (
-                                        <div className='d-flex flex-column justify-content-center align-items-center h-75' style={{}}>
+                                        <div className='d-flex flex-column justify-content-center align-items-center h-75'>
                                             <img src="/no-data.svg" className="noDataImg" alt="no-data" />
                                             <p className='mb-0' style={{ fontSize: "12px" }}>no files to show</p>
                                         </div>
                                     )}
+
                                 </div>
-                                {repo?.updatedAt && (
+
+                                {lastUpdated.length > 0 && (
                                     <p style={{ fontSize: "10px", fontWeight: "500", textAlign: "end", marginBottom: "0", marginTop: "-11px", paddingRight: "5px", width: "100%" }}>
-                                        Last updated: {new Date(repo.updatedAt).toLocaleString()}
+                                        Last updated: {new Date(lastUpdated).toLocaleString()}
                                     </p>
                                 )}
                             </div>

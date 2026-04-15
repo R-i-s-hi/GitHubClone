@@ -60,11 +60,13 @@ export const fetchRepoById = async (req, res) => {
       .populate("owner", "_id username email")
       .populate("issues");
 
-    const files = await fetchRepoFiles(repository.name);
+    const {files, lastUpdated, commitMsg} = await fetchRepoFiles(repository.name);
 
     res.status(200).json({
       repository,
       files,
+      lastUpdated,
+      commitMsg
     });
   } catch (err) {
     console.error("Error during fetching repository : ", err.message);
