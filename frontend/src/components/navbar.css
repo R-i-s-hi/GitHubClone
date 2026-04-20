@@ -65,25 +65,40 @@ nav .profile-btn svg {
 }
 
 .dropdown .dropdown-menu {
-  background: black;
+  background: #0c1110;
   padding: 6px;
-  border: 1.5px solid #151b24;
+  border: 1.5px solid #20272d;
   font-size: 13px;
   font-weight: 500;
-  border-radius: 10px;
-  min-width: 130px;
+  border-radius: 8px;
 }
 
 .dropdown-menu .dropdown-item {
-  font-weight: 600;
-  background-color: black;
-  color: whitesmoke;
-  border-radius: 5px;
-  padding: 4px 15px;
+  font-size: small;
+  color: #888888;
+  border-radius: 6px;
+  padding: 4px 15px 4px 6px;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  text-align: start;
+}
+
+.dropdown-menu .dropdown-item svg path {
+  fill: #888888;
 }
 
 .dropdown-menu .dropdown-item:hover {
-  background-color: rgb(47, 46, 46);
+  color: whitesmoke;
+  background-color: rgba(128, 128, 128, 0.184);
+}
+.dropdown-menu .logout-btn:hover {
+  background-color: rgba(224, 36, 36, 0.947);
+  color: whitesmoke;
+}
+
+.dropdown-menu .dropdown-item:hover svg path {
+  fill: whitesmoke;
 }
 
 nav .profile-btn:hover {

@@ -11,12 +11,6 @@ import { Link } from "react-router-dom";
 import { toast } from "react-hot-toast";
 function Login() {
 
-  // useEffect(() => {
-  //   localStorage.removeItem("token");
-  //   localStorage.removeItem("userId");
-  //   setCurrentUser(null);
-  // });
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -29,7 +23,7 @@ function Login() {
       setLoading(true);
       const res = await axios.post("http://localhost:5000/user/login", { email: email, password: password }, { headers: { "Content-Type": "application/json" } });
 
-      if(res.status === 400) {
+      if (res.status === 400) {
         setEmail("");
         setPassword("");
         toast.error(jsonRes.message);
@@ -45,7 +39,7 @@ function Login() {
       toast.success("user logged in successfully!");
     } catch (err) {
       setEmail("");
-    setPassword("");
+      setPassword("");
       console.error(err);
       toast.error("Login Failed!");
       setLoading(false);

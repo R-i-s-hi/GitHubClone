@@ -26,7 +26,13 @@ export const getAllIssues = async(req, res) => {
     const { id } = req.params;
 
   try {
-    const issues = await Issue.find({ repository: id });
+    const issues = await Issue.find({ repository: id })
+                              .populate({
+                                path: 'repository',
+                                select: 'name owner visibility',
+                                populate: {path: "owner", select: "_id"}
+                              })
+                              .populate('createdBy', 'username');
 
     if (!issues || issues.length === 0) {
       return res.status(404).json({ error: "Issues not found!" });

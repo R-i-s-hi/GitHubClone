@@ -87,13 +87,18 @@ export default function IssueModal({ issue, onClose, type }) {
                 Created at: {new Date(issue.createdAt).toLocaleString()}
               </p><br />
               <p>Repo:&nbsp;
-                <Link className="link" to={`/repo/${issue.repository}`}>
-                  {issue.repository}
+                <Link className="link" to={`/repo/${issue.repository._id}`} onClick={(e) => {
+                  if((issue.repository.visibility === false) && (currUser !== issue.repository.owner._id.toString())) {
+                    e.preventDefault();
+                    toast.error("This is a private repository!");
+                  }
+                }}>
+                  {issue.repository.name}
                 </Link>
               </p>
               <p>Created by:&nbsp;
-                <Link className="link" to={`/profile/${issue.createdBy}`}>
-                  {issue.createdBy}
+                <Link className="link" to={`/profile/${issue.createdBy._id}`}>
+                  @{issue.createdBy.username}
                 </Link>
               </p>
             </div>
@@ -112,7 +117,7 @@ export default function IssueModal({ issue, onClose, type }) {
               <p>Do you really want to delete this issue?</p>
             </div>
             <div className="modal-footer">
-              <button type="button" class="btn btn-secondary fw-semibold px-3 d-flex align-items-center justify-content-center" onClick={onClose}>Cancel</button>
+              <button type="button" class="fw-semibold px-3" id="cancel-btn" onClick={onClose}>Cancel</button>
               <button type="submit" class="btn fw-semibold px-3 d-flex align-items-center justify-content-center" style={{backgroundColor: "#ff0000", color: "whitesmoke", border: "none"}} onClick={() => deleteIssue(issue._id)}>Delete</button>
             </div>
           </div>
@@ -156,7 +161,7 @@ export default function IssueModal({ issue, onClose, type }) {
               </div>
 
               <span class="modal-footer p-0" style={{borderTop: "0"}}>
-                  <button type="button" class="btn btn-secondary fw-semibold px-4 d-flex align-items-center justify-content-center" onClick={onClose}>Cancel</button>
+                  <button type="button" class="fw-semibold px-4 d-flex" id="cancel-btn" onClick={onClose}>Cancel</button>
                   <button type="submit" class="btn fw-semibold px-4 d-flex align-items-center justify-content-center" style={{backgroundColor: "green", color: "whitesmoke", border: "1px solid green"}}>Add</button>
               </span>
             </form>

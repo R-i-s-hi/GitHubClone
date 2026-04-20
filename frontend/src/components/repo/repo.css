@@ -56,6 +56,13 @@
     gap: 0.4rem;
 }
 
+#staticBackdrop .modal-footer {
+    display: flex !important;
+    align-items: center;
+    justify-content: end;
+    gap: 0.6rem;
+}
+
 #staticBackdrop2 .modal-body .edit-repo-form, #staticBackdrop3 .modal-body .edit-repo-form {
     display: flex;
     flex-direction: column;
@@ -71,6 +78,7 @@
 
 #staticBackdrop2 .modal-body .edit-repo-form .modal-footer {
     display: flex !important;
+
 }
 
 #staticBackdrop2 .modal-body .edit-repo-form div label, #staticBackdrop3 .modal-body .edit-repo-form div label {
@@ -78,8 +86,9 @@
     font-weight: 500;
 }
 
-#staticBackdrop3 .modal-body .modal-footer button {
+#staticBackdrop .modal-footer button, #staticBackdrop2 .modal-body .edit-repo-form .modal-footer button, #staticBackdrop3 .modal-body .modal-footer button {
     height: 28px !important;
+    width: 85px !important;
 }
 
 #staticBackdrop2 .modal-body .edit-repo-form div input, #staticBackdrop2 .modal-body .edit-repo-form div textarea, #staticBackdrop3 .modal-body .edit-repo-form div input, #staticBackdrop3 .modal-body .edit-repo-form div textarea {
@@ -388,11 +397,8 @@ td {
 }
 
 @media(max-width: 470px) {
-    .repo-div span h4 {
-        width: 125px;
-    }
     .repo-div span {
-        gap: 0;
+        gap: 4px;
     }
     th {
         padding-left: 0.5rem !important;

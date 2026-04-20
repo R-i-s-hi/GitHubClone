@@ -170,23 +170,32 @@ export const updateUserProfile = async (req, res) => {
 
 export const deleteUserProfile = async (req, res) => {
   const currentID = req.params.id;
+  const { password } = req.body;
 
   try {
     await connectClient();
     const db = client.db("repoDoc");
     const usersCollection = db.collection("users");
+    const reposCollection = db.collection("repositories");
+    const issuesCollection = db.collection("issues");
 
-    const result = await usersCollection.deleteOne({
-      _id: new ObjectId(currentID),
-    });
-
-    if (result.deleteCount == 0) {
+    const user = await usersCollection.findOne({ _id: new ObjectId(currentID) });
+    if (!user) {
       return res.status(404).json({ message: "User not found!" });
     }
 
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Invalid password" });
+    }
+
+    await usersCollection.deleteOne({_id: new ObjectId(currentID)});
+    await reposCollection.deleteMany({owner: new ObjectId(currentID)});
+    await issuesCollection.deleteMany({createdBy: new ObjectId(currentID)});
+
     res.json({ message: "User Profile Deleted!" });
   } catch (err) {
-    console.error("Error during updating : ", err.message);
+    console.error("Error during deletion : ", err.message);
     res.status(500).send("Server error!");
   }
 };

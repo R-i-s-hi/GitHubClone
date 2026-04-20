@@ -16,8 +16,8 @@ function Repo() {
     const [toBeFileContent, setToBeFileContent] = useState("");
     const [commitName, setCommitName] = useState("");
     const [userPassword, setUserPassword] = useState("");
-    const [lastUpdated, setLastUpdated] = useState("");
-    const [commitMsg, setCommitMsg] = useState("");
+    const [lastUpdated, setLastUpdated] = useState(null);
+    const [commitMsg, setCommitMsg] = useState(null);
 
     const currUser = localStorage.getItem("userId");
     const navigate = useNavigate();
@@ -323,6 +323,7 @@ function Repo() {
                                                                     <textarea
                                                                         id="description"
                                                                         name="description"
+                                                                        rows={5}
                                                                         maxLength={100}
                                                                         value={formValues.description}
                                                                         onChange={handleChange}
@@ -367,7 +368,7 @@ function Repo() {
                                                                     </label>
                                                                 </div>
 
-                                                                <span class="modal-footer px-4" style={{ borderTop: "0" }}>
+                                                                <span class="modal-footer px-4 pe-0" style={{ borderTop: "0" }}>
                                                                     <button type="button" class="btn btn-secondary fw-semibold px-3" data-bs-dismiss="modal">Cancel</button>
                                                                     <button type="submit" class="btn fw-semibold px-4" style={{ backgroundColor: "green", color: "whitesmoke", border: "1px solid green" }}>Save</button>
                                                                 </span>
@@ -397,7 +398,7 @@ function Repo() {
                                                             Are you sure you want to delete your repo?
                                                         </div>
                                                         <div class="modal-footer px-4" style={{ borderTop: "0" }}>
-                                                            <button type="button" class="btn btn-secondary fw-semibold px-3" data-bs-dismiss="modal">Cancel</button>
+                                                            <button type="button" class="fw-semibold px-3" data-bs-dismiss="modal">Cancel</button>
                                                             <button type="button" class="btn fw-semibold px-3" data-bs-dismiss="modal" onClick={() => deleteRepo(repo._id)} style={{ backgroundColor: "red", color: "whitesmoke", border: "1px solid red" }}>Delete</button>
                                                         </div>
                                                     </div>
@@ -659,7 +660,7 @@ function Repo() {
 
                                 </div>
 
-                                {lastUpdated.length > 0 && (
+                                {lastUpdated && (
                                     <p style={{ fontSize: "10px", fontWeight: "500", textAlign: "end", marginBottom: "0", marginTop: "-11px", paddingRight: "5px", width: "100%" }}>
                                         Last updated: {new Date(lastUpdated).toLocaleString()}
                                     </p>

@@ -1,4 +1,4 @@
-import React from 'react'
+import { useState } from 'react';
 import { Link, useParams } from "react-router-dom";
 import "./navbar.css";
 import { useNavigate } from 'react-router-dom';
@@ -41,26 +41,36 @@ function Navbar() {
             </svg>
           </button>
 
-          <ul class="dropdown-menu">
-            <li>
-              <Link class="dropdown-item" to={`/profile/${id}`}>profile</Link>
-            </li>
-            <li>
-              <button
-                class="dropdown-item"
-                onClick={() => {
-                  localStorage.removeItem("token");
-                  localStorage.removeItem("userId");
+            <ul className="dropdown-menu">
+              <li>
+                <Link className="dropdown-item" to={`/profile/${id}`}>
+                  <svg width="14" height="14" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg" transform="rotate(0 0 0)">
+                    <path fillRule="evenodd" clipRule="evenodd" d="M16.4337 6.35C16.4337 8.74 14.4937 10.69 12.0937 10.69L12.0837 10.68C9.69365 10.68 7.74365 8.73 7.74365 6.34C7.74365 3.95 9.70365 2 12.0937 2C14.4837 2 16.4337 3.96 16.4337 6.35ZM14.9337 6.34C14.9337 4.78 13.6637 3.5 12.0937 3.5C10.5337 3.5 9.25365 4.78 9.25365 6.34C9.25365 7.9 10.5337 9.18 12.0937 9.18C13.6537 9.18 14.9337 7.9 14.9337 6.34Z" className="icon-path"/>
+                    <path d="M12.0235 12.1895C14.6935 12.1895 16.7835 12.9395 18.2335 14.4195V14.4095C20.2801 16.4956 20.2739 19.2563 20.2735 19.4344L20.2735 19.4395C20.2635 19.8495 19.9335 20.1795 19.5235 20.1795H19.5135C19.0935 20.1695 18.7735 19.8295 18.7735 19.4195C18.7735 19.3695 18.7735 17.0895 17.1535 15.4495C15.9935 14.2795 14.2635 13.6795 12.0235 13.6795C9.78346 13.6795 8.05346 14.2795 6.89346 15.4495C5.27346 17.0995 5.27346 19.3995 5.27346 19.4195C5.27346 19.8295 4.94346 20.1795 4.53346 20.1795C4.17346 20.1995 3.77346 19.8595 3.77346 19.4495L3.77345 19.4448C3.77305 19.2771 3.76646 16.506 5.81346 14.4195C7.26346 12.9395 9.35346 12.1895 12.0235 12.1895Z" className="icon-path"/>
+                  </svg>
+                  <span>Profile</span>
+                </Link>
+              </li>
+              <li>
+                <button
+                  className="dropdown-item logout-btn"
+                  onClick={() => {
+                    localStorage.removeItem("token");
+                    localStorage.removeItem("userId");
 
-                  navigate("/auth", {replace: true});
-                  toast.success("Logged out successfully!");
-                }}
-              >
-                logout
-              </button>
-            </li>
+                    toast.success("Logged out successfully!");
+                    navigate("/auth", {replace: true});
+                  }}
+                >
+                  <svg width="14" height="14" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" transform="rotate(0 0 0)">
+                    <path d="M11.5781 2.5C10.3355 2.5 9.32812 3.50736 9.32812 4.75V6.6285C9.44877 6.70925 9.56333 6.80292 9.66985 6.90952L10.8281 8.06853V4.75C10.8281 4.33579 11.1639 4 11.5781 4H17.5781C17.9923 4 18.3281 4.33579 18.3281 4.75V20.25C18.3281 20.6642 17.9923 21 17.5781 21H11.5781C11.1639 21 10.8281 20.6642 10.8281 20.25V16.9314L9.6699 18.0904C9.56336 18.197 9.44879 18.2907 9.32812 18.3715V20.25C9.32812 21.4926 10.3355 22.5 11.5781 22.5H17.5781C18.8208 22.5 19.8281 21.4926 19.8281 20.25V4.75C19.8281 3.50736 18.8208 2.5 17.5781 2.5H11.5781Z" className="icon-path"/>
+                    <path d="M3.57812 12.5C3.57812 12.7259 3.67796 12.9284 3.83591 13.0659L7.79738 17.0301C8.09017 17.3231 8.56504 17.3233 8.85804 17.0305C9.15104 16.7377 9.1512 16.2629 8.85841 15.9699L6.14046 13.25L12.0781 13.25C12.4923 13.25 12.8281 12.9142 12.8281 12.5C12.8281 12.0858 12.4923 11.75 12.0781 11.75L6.14028 11.75L8.85839 9.03016C9.15119 8.73718 9.15104 8.2623 8.85806 7.9695C8.56507 7.6767 8.0902 7.67685 7.7974 7.96984L3.83388 11.9359C3.67711 12.0733 3.57812 12.2751 3.57812 12.5Z" className="icon-path"/>
+                  </svg>
+                  <span>Logout</span>
+                </button>
+              </li>
 
-          </ul>
+            </ul>
 
         </div>
       </div>

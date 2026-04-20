@@ -1,4 +1,0 @@
-this is a demo file.
-and this is a text file.
-and now it is updated.
-and it is again updated.

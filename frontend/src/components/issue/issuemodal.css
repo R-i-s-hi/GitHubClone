@@ -15,7 +15,8 @@
     background-color: #0c1110;
     color: whitesmoke;
     border-radius: 8px;
-    min-width: 350px;
+    max-width: 500px;
+    width: 100%;
     border: 0.8px solid #808080ac;
 }
 
@@ -84,8 +85,25 @@
 }
 
 .custom-modal .modal-footer button {
-    height: 25px !important;
-    font-size: small;
+    font-size: 12px;
+    width: 85px;
+    height: 28px;
+}
+
+.custom-modal .modal-footer #cancel-btn {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  font-weight: 500;
+  color: gray;
+  background-color: #0c1110;
+  border: 1px solid gray;
+}
+
+.custom-modal .modal-footer #cancel-btn:hover {
+    background-color: rgba(128, 128, 128, 0.184);
+    color: whitesmoke;
 }
 
 .edit-repo-form div input, .edit-repo-form div textarea {
