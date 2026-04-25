@@ -88,51 +88,6 @@
 | **Real-time** | Socket.io |
 | **CLI** | Yargs |
 
-## 🛠️ Tech Stack
-
-<table width="100%">
-  <thead>
-    <tr>
-      <th align="left">Layer</th>
-      <th align="left">Technology</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>Frontend</strong></td>
-      <td>React.js, Bootstrap 5</td>
-    </tr>
-    <tr>
-      <td><strong>Backend</strong></td>
-      <td>Node.js, Express.js</td>
-    </tr>
-    <tr>
-      <td><strong>Database</strong></td>
-      <td>MongoDB (Atlas)</td>
-    </tr>
-    <tr>
-      <td><strong>File Storage</strong></td>
-      <td>AWS S3</td>
-    </tr>
-    <tr>
-      <td><strong>File Uploads</strong></td>
-      <td>UploadThing</td>
-    </tr>
-    <tr>
-      <td><strong>Authentication</strong></td>
-      <td>JWT (JSON Web Tokens)</td>
-    </tr>
-    <tr>
-      <td><strong>Real-time</strong></td>
-      <td>Socket.io</td>
-    </tr>
-    <tr>
-      <td><strong>CLI</strong></td>
-      <td>Yargs</td>
-    </tr>
-  </tbody>
-</table>
-
 ---
 
 ## 🚀 Getting Started
@@ -364,56 +319,56 @@ node src/index.js push johndoe demo_repo
 
 ## 📡 API Reference
 
-> All endpoints except `/auth` routes require: `Authorization: Bearer <token>`
+> All endpoints except auth routes require: `Authorization: Bearer <token>`
 
 ### Auth
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| `POST` | `/api/auth/register` | Register a new user |
-| `POST` | `/api/auth/login` | Login and receive a JWT |
+| `POST` | `/user/signup` | Register a new user |
+| `POST` | `/user/login` | Login and receive a JWT |
 
 ### Users
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| `GET` | `/api/users/:username` | Get user profile |
-| `PUT` | `/api/users/:id` | Update user profile |
-| `DELETE` | `/api/users/:id` | Delete account |
+| `GET` | `/user/allUsers` | Get all users |
+| `GET` | `/user/userProfile/:id` | Get a user profile by ID |
+| `GET` | `/user/:id/starRepos` | Get all starred repos of a user |
+| `PUT` | `/user/starRepo/:repoid` | Star a repository |
+| `PUT` | `/user/unstarRepo/:repoid` | Unstar a repository |
+| `PUT` | `/user/updateProfile/:id` | Update user profile |
+| `DELETE` | `/user/deleteProfile/:id` | Delete user account |
 
 ### Repositories
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| `GET` | `/api/repos` | List all repositories |
-| `GET` | `/api/repos/:id` | Get a single repository |
-| `POST` | `/api/repos` | Create a new repository |
-| `PUT` | `/api/repos/:id` | Update repository details |
-| `DELETE` | `/api/repos/:id` | Delete a repository |
-| `POST` | `/api/repos/:id/star` | Star / unstar a repository |
+| `POST` | `/repo/create` | Create a new repository |
+| `GET` | `/repo/allrepos` | List all repositories |
+| `GET` | `/repo/get/:userId` | Get repos by user ID |
+| `GET` | `/repo/name/:name` | Fetch a repo by name |
+| `GET` | `/repo/repoid/:id` | Fetch a repo by ID |
+| `PATCH` | `/repo/toggleVis/:id` | Toggle repository visibility |
+| `PUT` | `/repo/update/:id` | Update repository details |
+| `DELETE` | `/repo/delete/:id` | Delete a repository |
 
 ### Issues
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| `GET` | `/api/repos/:repoId/issues` | List issues for a repo |
-| `POST` | `/api/repos/:repoId/issues` | Create a new issue |
-| `PUT` | `/api/repos/:repoId/issues/:id` | Update an issue |
-| `DELETE` | `/api/repos/:repoId/issues/:id` | Delete an issue |
+| `POST` | `/issue/createIssue/:id` | Create a new issue for a repo |
+| `GET` | `/issue/allIssues/:id` | Get all issues for a repo |
+| `GET` | `/issue/:issueId` | Get a specific issue by ID |
+| `PUT` | `/issue/:id` | Update an issue |
+| `DELETE` | `/issue/:id` | Delete an issue |
 
-### Files & Commits
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/api/repos/:id/files` | Get repo file tree |
-| `PUT` | `/api/repos/:id/files` | Edit file content and save as commit |
-| `GET` | `/api/repos/:id/commits` | Get commit history |
-
-### Uploads
+### Files
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| `POST` | `/api/uploadthing` | Upload files via UploadThing |
+| `POST` | `/file/content` | Fetch file content from a repo |
+| `PUT` | `/file/update/:reponame/:filename` | Edit a file and save as commit |
 
 ---
 
