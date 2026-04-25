@@ -404,16 +404,16 @@ GITHUBCLONE/
 │       │   └── helper.js                # isUserVerified, isRepoVerified
 │       └── index.js                     # Entry point: server start + CLI (Yargs)
 │
-└── frontend/                          # React frontend
+└── frontend/                            # React frontend
     ├── src/
     │   │
-    │   ├── components/              # UI components
-    │   │   ├── auth/                # SignUp, Login page
-    │   │   ├── dashboard/           # Main dashboard
-    │   │   ├── issue/               # Issue Modals
-    │   │   ├── repo/                # Repo and file components
-    │   │   ├── user/                # Profile page
-    │   │   ├── utils/               # UploadThing
+    │   ├── components/                  # UI components
+    │   │   ├── auth/                    # SignUp, Login page
+    │   │   ├── dashboard/               # Main dashboard
+    │   │   ├── issue/                   # Issue Modals
+    │   │   ├── repo/                    # Repo and file components
+    │   │   ├── user/                    # Profile page
+    │   │   ├── utils/                   # UploadThing
     │   │   ├── navbar.css
     │   │   └── Navbar.jsx
     │   │
