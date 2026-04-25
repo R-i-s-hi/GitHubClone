@@ -229,13 +229,13 @@
 
 .reposContainer .repos .col a {
   text-decoration: none;
-  color: inherit;
+  font-weight: 500;
+  color: #5b8dee !important;
 }
 
 .reposContainer .repos .col a:hover {
   text-decoration: underline;
-  color: rgb(26, 26, 233);
-  text-decoration-color: rgb(26, 26, 233);
+  text-decoration-color: #5b8dee88;
 }
 
 .reposContainer .repos .col .badge {
@@ -315,6 +315,7 @@
 .reposContainer .issue-content .issue-view-btn {
   width: fit-content;
   padding-inline: 0.8rem;
+  padding-block: 0.1rem;
   border-radius: 6px;
   background-color: inherit;
   border: 1px solid gray;

@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 
-export default function IssueModal({ issue, onClose, type }) {
+export default function IssueModal({ issue, onClose, type, fetchIssues }) {
   if (!issue) return null;
   const currUser = localStorage.getItem("userId");
   const navigate = useNavigate();
@@ -37,6 +37,8 @@ export default function IssueModal({ issue, onClose, type }) {
     } catch (err) {
       console.error("saveChanges error: ", err);
       toast.error("Something went wrong!");
+    } finally {
+      fetchIssues();
     }
   };
 
@@ -52,6 +54,8 @@ export default function IssueModal({ issue, onClose, type }) {
     } catch(e) {
         console.log(e);
         toast.error("something went wrong!");
+    } finally {
+      fetchIssues();
     }
   }
 
@@ -69,41 +73,75 @@ export default function IssueModal({ issue, onClose, type }) {
   let modalContent;
   if(type === "details") {
     modalContent = (
-        <div className="custom-modal-overlay" onClick={onClose}>
-          <div className="custom-modal" onClick={(e) => e.stopPropagation()} >
-            <div className="modal-header">
-              <h2 className="modal-title">Issue Details</h2>
-              <button className="btn btn-secondary" onClick={onClose}>
-                ✖
-              </button>
-            </div>
+<div className="custom-modal-overlay" onClick={onClose}>
+  <div className="custom-modal" onClick={(e) => e.stopPropagation()}>
 
-            <div className="modal-body">
-              <i>status:&nbsp;{issue.status}</i><br /><br />
-              <h4>{issue.title}</h4>
-              <p>{issue.description}</p><br />
-              <p>ID: {issue._id}</p>
-              <p>
-                Created at: {new Date(issue.createdAt).toLocaleString()}
-              </p><br />
-              <p>Repo:&nbsp;
-                <Link className="link" to={`/repo/${issue.repository._id}`} onClick={(e) => {
-                  if((issue.repository.visibility === false) && (currUser !== issue.repository.owner._id.toString())) {
-                    e.preventDefault();
-                    toast.error("This is a private repository!");
-                  }
-                }}>
-                  {issue.repository.name}
-                </Link>
-              </p>
-              <p>Created by:&nbsp;
-                <Link className="link" to={`/profile/${issue.createdBy._id}`}>
-                  @{issue.createdBy.username}
-                </Link>
-              </p>
-            </div>
-          </div>
+    <div className="modal-header details-modal-header">
+      <div className="d-flex justify-content-between w-100">
+        <span className={`issue-status-badge ${issue.status === 'open' ? 'badge-open' : 'badge-closed'}`}>
+          {issue.status.charAt(0).toUpperCase() + issue.status.slice(1)}
+        </span>
+        <button className="modal-close-btn" onClick={onClose}>✕</button>
+      </div>
+      <div>
+        <h4 className="issue-title mt-2">{issue.title}</h4>
+        <p className="issue-description">{issue.description}</p>
+      </div>
+    </div>
+
+    <div className="modal-body">
+      <div className="issue-meta">
+        <div className="meta-row">
+          <span className="meta-label">ID</span>
+          <span className="meta-value meta-mono">
+            {issue._id.slice(0, 8)}...{issue._id.slice(-5)}
+          </span>
         </div>
+        <div className="meta-row">
+          <span className="meta-label">Created</span>
+          <span className="meta-value">
+            {new Date(issue.createdAt).toLocaleString()}
+          </span>
+        </div>
+        <div className="meta-row">
+          <span className="meta-label">Repo</span>
+          <Link
+            className="meta-link"
+            to={`/repo/${issue.repository._id}`}
+            onClick={(e) => {
+              if (issue.repository.visibility === false && currUser !== issue.repository.owner._id.toString()) {
+                e.preventDefault();
+                toast.error("This is a private repository!");
+              }
+            }}
+          >
+            {issue.repository.name}
+          </Link>
+        </div>
+        <div className="meta-row">
+          <span className="meta-label">Author</span>
+          <Link className="meta-link" to={`/profile/${issue.createdBy._id}`}>
+            @{issue.createdBy.username}
+          </Link>
+        </div>
+      </div>
+    </div>
+
+    <div className="modal-footer" style={{ borderTop: "0.8px solid #808080ac", paddingTop: "1rem"}}>
+      <button id="cancel-btn" onClick={onClose}>Close</button>
+      <button
+        id="cancel-btn"
+        onClick={() => {
+          toast.success("ID copied!");
+          navigator.clipboard.writeText(issue._id);
+          onClose();}}
+      >
+        Copy ID
+      </button>
+    </div>
+
+  </div>
+</div>
     )
   } else if (type === "delete") {
     modalContent = (

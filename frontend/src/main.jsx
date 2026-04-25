@@ -11,7 +11,7 @@ createRoot(document.getElementById('root')).render(
   <AuthProvider>
     <Router>
       <ProjectRoutes/>
-      <Toaster position="top-right" reverseOrder={false} />
+      <Toaster position="bottom-right" reverseOrder={false} />
     </Router>
   </AuthProvider>
 )

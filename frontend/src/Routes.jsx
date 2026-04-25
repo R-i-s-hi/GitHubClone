@@ -48,6 +48,14 @@ const ProjectRoutes = () => {
             element:<Profile/>
         },
         {
+            path:"/profile/:id/issues",
+            element:<Profile Pagetype="issues"/>
+        },
+        {
+            path:"/profile/:id/staredrepository",
+            element:<Profile Pagetype="starred"/>
+        },
+        {
             path:"/create",
             element:<Form/>
         },

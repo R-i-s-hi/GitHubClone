@@ -10,12 +10,14 @@ function Dashboard() {
   const [suggestedRepositories, setSuggestedRepositories] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const userId = localStorage.getItem("userId");
 
     const fetchRepositories = async () => {
       try {
+        setIsLoading(true);
         const response = await fetch(
           `http://localhost:5000/repo/get/${userId}`
         );
@@ -29,16 +31,21 @@ function Dashboard() {
         }
       } catch (err) {
         console.error("Error while fecthing repositories: ", err);
+      } finally {
+        setIsLoading(false);
       }
     };
 
     const fetchSuggestedRepositories = async () => {
       try {
+        setIsLoading(true);
         const response = await fetch(`http://localhost:5000/repo/allrepos`);
         const data = await response.json();
         setSuggestedRepositories(data);
       } catch (err) {
         console.error("Error while fecthing repositories: ", err);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -75,10 +82,7 @@ function Dashboard() {
             </button>
           </div>
           <div className="suggested-repo">
-            {suggestedRepositories.filter(repo => repo.visibility).length === 0 ? (
-              <p>No suggested repositories available.</p>
-            ) : 
-            (
+            {suggestedRepositories.filter(repo => repo.visibility).length > 0 && (
               suggestedRepositories
                 .filter(repo => repo.visibility)
                 .map((repo) => {
@@ -91,8 +95,18 @@ function Dashboard() {
                   </div>
                 )
               })
-            )
-            }
+            )}
+
+            {(suggestedRepositories.filter(repo => repo.visibility).length === 0) && (isLoading === false) && (
+              <p>No suggested repositories available.</p>
+            )}
+
+            {isLoading && (
+              <div className="d-flex align-items-center justify-content-center gap-2 h-100">
+                <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                <span role="status">Loading...</span>
+              </div>
+            )}
           </div>
 
           <hr className="suggested-events" />
@@ -141,7 +155,7 @@ function Dashboard() {
 
           <div className="main-repos">
 
-            {searchResults && searchResults.length > 0 ? (
+            {(searchResults) && (searchResults.length > 0) && (
               searchResults.map((repo) => (
                 <div className="search-repo-div" key={repo._id}>
                   <Link id="repo-name" to={`/repo/${repo._id}`}>
@@ -152,8 +166,17 @@ function Dashboard() {
                   </p>
                 </div>
               ))
-            ) : (
+            )}
+
+            {(searchResults.length === 0) && (isLoading === false) && (
               <p>No repo yet. Create a repo</p>
+            )}
+
+            {isLoading && (
+              <div className="d-flex align-items-center justify-content-center gap-2 h-100">
+                <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                <span role="status">Loading...</span>
+              </div>
             )}
 
           </div>

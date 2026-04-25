@@ -107,7 +107,7 @@
 
 #repo-name:hover {
   text-decoration: underline;
-  color: blue;
+  color: #5b8dee;
 }
 
 
@@ -119,8 +119,8 @@
 
 .dashboard .repo-div a:hover, .dashboard .search-repo-div a:hover {
   text-decoration: underline;
-  text-decoration-color: rgb(23, 23, 253);
-  color: blue;
+  text-decoration-color: #5b8dee !important;
+  color: #5b8dee !important;
   cursor: pointer;
 }
 
