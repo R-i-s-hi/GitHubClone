@@ -5,7 +5,9 @@
 </h1>
 
 <p><strong>A full-stack GitHub-inspired platform built with React, Node.js & MongoDB</strong></p>
-<p>[Live](https://github-clone-one-smoky.vercel.app/) &nbsp;&nbsp; [Demo video]()</p>
+<p>
+  <a href="https://github-clone-one-smoky.vercel.app/">Live</a> &nbsp;&nbsp;
+  <a href="https://github-clone-one-smoky.vercel.app/">Demo Video</a>
 
 <p>
   <a href="#-overview">Overview</a> •
