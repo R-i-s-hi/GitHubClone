@@ -5,8 +5,8 @@
     RepoDoc - A GitHub Clone
   </h1>
   <p>
-    <a href="https://github-clone-one-smoky.vercel.app/">Live</a> &nbsp;&nbsp;
-    <a href="https://github-clone-one-smoky.vercel.app/">Demo Video</a>
+    <a href="https://github-clone-one-smoky.vercel.app/"><i>Live</i></a> &nbsp;&nbsp;
+    <a href="https://github-clone-one-smoky.vercel.app/"><i>Demo Video</i></a>
   <p>
 </div>
 
