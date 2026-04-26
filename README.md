@@ -3,13 +3,12 @@
 <h1>
   RepoDoc - A GitHub Clone
 </h1>
-
-<p><strong>A full-stack GitHub-inspired platform built with React, Node.js & MongoDB</strong></p>
 <p>
   <a href="https://github-clone-one-smoky.vercel.app/">Live</a> &nbsp;&nbsp;
   <a href="https://github-clone-one-smoky.vercel.app/">Demo Video</a>
-
 <p>
+
+<p><strong>A full-stack GitHub-inspired platform built with React, Node.js & MongoDB</strong></p>
   <a href="#-overview">Overview</a> •
   <a href="#-features">Features</a> •
   <a href="#-tech-stack">Tech Stack</a> •
