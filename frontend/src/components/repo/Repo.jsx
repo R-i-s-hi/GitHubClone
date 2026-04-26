@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import Navbar from '../Navbar';
 import './repo.css'
+const url = import.meta.env.VITE_BASE_URI;
 
 function Repo() {
     const { id } = useParams();
@@ -37,7 +38,7 @@ function Repo() {
 
     const handleFileClick = async (file) => {
         setSelectedFile(file.fileName);
-        const content = await fetch(`http://localhost:5000/file/content`, {
+        const content = await fetch(`${url}/file/content`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -69,22 +70,22 @@ function Repo() {
             toast.error("Please fill in all fields!");
             return;
         }
-        if(toBeFileContent !== fileContent) {
+        if (toBeFileContent !== fileContent) {
             setFileContent(toBeFileContent);
         }
 
         try {
-            const res = await fetch(`http://localhost:5000/file/update/${repo.name}/${selectedFile}`, {
+            const res = await fetch(`${url}/file/update/${repo.name}/${selectedFile}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({ content: toBeFileContent, commitName: commitName, password: userPassword, userId: currUser })
             });
-        
+
             if (res.status === 200) toast.success("File updated successfully!")
             if (res.status === 401) toast.error("Invalid password!")
-                
+
         } catch (e) {
             toast.error("Failed to update file!");
         } finally {
@@ -94,7 +95,7 @@ function Repo() {
             const modal = bootstrap.Modal.getInstance(modalEl);
             modal.hide();
         }
-    
+
     }
 
     const handleFileContentChange = (e) => {
@@ -131,7 +132,7 @@ function Repo() {
 
     const fetchRepo = async () => {
         try {
-            const data = await fetch(`http://localhost:5000/repo/repoid/${id}`);
+            const data = await fetch(`${url}/repo/repoid/${id}`);
             if (data.status !== 200) {
                 toast.error("Something went wrong!");
                 return;
@@ -152,7 +153,7 @@ function Repo() {
     useEffect(() => {
         if (!currRepoId) return;
         const checkStarred = async () => {
-            const result = await fetch(`http://localhost:5000/user/${currUser}/starRepos`);
+            const result = await fetch(`${url}/user/${currUser}/starRepos`);
             const data = await result.json();
             const stared = data.some((repo) => repo._id === currRepoId);
             setIsStared(stared);
@@ -163,7 +164,7 @@ function Repo() {
 
     const deleteRepo = async (repoId) => {
         try {
-            const result = await fetch(`http://localhost:5000/repo/delete/${repoId}`, { method: "DELETE" });
+            const result = await fetch(`${url}/repo/delete/${repoId}`, { method: "DELETE" });
 
             if (result.status == 200) {
                 toast.success("repo deleted successfully");
@@ -179,7 +180,7 @@ function Repo() {
     const saveChanges = async (e) => {
         e.preventDefault();
         try {
-            const result = await fetch(`http://localhost:5000/repo/update/${id}`, {
+            const result = await fetch(`${url}/repo/update/${id}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(formValues),
@@ -202,7 +203,7 @@ function Repo() {
 
     const handleStaring = async (repoid) => {
         if (!isStared) {
-            const result = await fetch(`http://localhost:5000/user/starRepo/${repoid}`, {
+            const result = await fetch(`${url}/user/starRepo/${repoid}`, {
                 method: "PUT",
                 body: JSON.stringify({ userId: currUser }),
                 headers: { "Content-Type": "application/json" }
@@ -212,7 +213,7 @@ function Repo() {
                 toast.success("repository is stared!");
             }
         } else {
-            const result = await fetch(`http://localhost:5000/user/unstarRepo/${repoid}`, {
+            const result = await fetch(`${url}/user/unstarRepo/${repoid}`, {
                 method: "PUT",
                 body: JSON.stringify({ userId: currUser }),
                 headers: { "Content-Type": "application/json" }
@@ -228,7 +229,7 @@ function Repo() {
         e.preventDefault();
         try {
 
-            const data = await fetch(`http://localhost:5000/issue/createIssue/${id}`, {
+            const data = await fetch(`${url}/issue/createIssue/${id}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -554,7 +555,7 @@ function Repo() {
                                                                     </div>
 
                                                                     <span class="modal-footer" style={{ borderTop: "0", paddingRight: "0" }}>
-                                                                        <button type="button" class="btn btn-secondary fw-semibold px-3 cancel" data-bs-dismiss="modal" onClick={ () => setToBeFileContent(fileContent)}>Cancel</button>
+                                                                        <button type="button" class="btn btn-secondary fw-semibold px-3 cancel" data-bs-dismiss="modal" onClick={() => setToBeFileContent(fileContent)}>Cancel</button>
                                                                         <button type="button" class="btn fw-semibold px-3" id='editFileBtn' style={{ backgroundColor: "green", color: "whitesmoke", border: "1px solid green" }} onClick={handlePassModalOpen}>Save</button>
                                                                     </span>
                                                                 </form>
@@ -572,20 +573,20 @@ function Repo() {
                                                                 <form onSubmit={handleConfirmFileUpdateClick} className="edit-repo-form">
 
                                                                     <input
-                                                                     type="text"
-                                                                     maxLength={40}
-                                                                     placeholder='Enter commit name'
-                                                                     value={commitName}
-                                                                     onChange={handleCommitNameChange}
-                                                                     style={{ backgroundColor: "black", padding: "4px 8px", fontSize: "13.5px", color: "whitesmoke", border: "0.8px solid #808080ac", borderRadius: "6px" }}
+                                                                        type="text"
+                                                                        maxLength={40}
+                                                                        placeholder='Enter commit name'
+                                                                        value={commitName}
+                                                                        onChange={handleCommitNameChange}
+                                                                        style={{ backgroundColor: "black", padding: "4px 8px", fontSize: "13.5px", color: "whitesmoke", border: "0.8px solid #808080ac", borderRadius: "6px" }}
                                                                     />
                                                                     <input
-                                                                     type="password"
-                                                                     minLength={6}
-                                                                     placeholder='Enter your password'
-                                                                     value={userPassword}
-                                                                     onChange={handlePasswordChange}
-                                                                     style={{ backgroundColor: "black", padding: "4px 8px", fontSize: "13.5px", color: "whitesmoke", border: "0.8px solid #808080ac", borderRadius: "6px" }}
+                                                                        type="password"
+                                                                        minLength={6}
+                                                                        placeholder='Enter your password'
+                                                                        value={userPassword}
+                                                                        onChange={handlePasswordChange}
+                                                                        style={{ backgroundColor: "black", padding: "4px 8px", fontSize: "13.5px", color: "whitesmoke", border: "0.8px solid #808080ac", borderRadius: "6px" }}
                                                                     />
 
                                                                     <span class="modal-footer" style={{ borderTop: "0", paddingRight: "0" }}>
@@ -598,15 +599,15 @@ function Repo() {
                                                     </div>
                                                 </div>
                                             </>
-                                        ): (
+                                        ) : (
                                             <div className='right'>
-                                            <p className='mb-0'>
-                                                <svg width="17" height="17" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg" transform="rotate(0 0 0)">
-                                                    <path d="M3.13644 9.54175C3.02923 9.94185 3.26667 10.3531 3.66676 10.4603C4.06687 10.5675 4.47812 10.3301 4.58533 9.92998C5.04109 8.22904 6.04538 6.72602 7.44243 5.65403C8.83948 4.58203 10.5512 4.00098 12.3122 4.00098C14.0731 4.00098 15.7848 4.58203 17.1819 5.65403C18.3999 6.58866 19.3194 7.85095 19.8371 9.28639L18.162 8.34314C17.801 8.1399 17.3437 8.26774 17.1405 8.62867C16.9372 8.98959 17.0651 9.44694 17.426 9.65017L20.5067 11.3849C20.68 11.4825 20.885 11.5072 21.0766 11.4537C21.2682 11.4001 21.4306 11.2727 21.5282 11.0993L23.2629 8.01828C23.4661 7.65734 23.3382 7.2 22.9773 6.99679C22.6163 6.79358 22.159 6.92145 21.9558 7.28239L21.195 8.63372C20.5715 6.98861 19.5007 5.54258 18.095 4.464C16.436 3.19099 14.4033 2.50098 12.3122 2.50098C10.221 2.50098 8.1883 3.19099 6.52928 4.464C4.87027 5.737 3.67766 7.52186 3.13644 9.54175Z" fill="#f1f6fd" />
-                                                    <path d="M21.4906 14.4582C21.5978 14.0581 21.3604 13.6469 20.9603 13.5397C20.5602 13.4325 20.1489 13.6699 20.0417 14.07C19.5859 15.7709 18.5816 17.274 17.1846 18.346C15.7875 19.418 14.0758 19.999 12.3149 19.999C10.5539 19.999 8.84219 19.418 7.44514 18.346C6.2292 17.4129 5.31079 16.1534 4.79261 14.721L6.45529 15.6573C6.81622 15.8605 7.27356 15.7327 7.47679 15.3718C7.68003 15.0108 7.55219 14.5535 7.19127 14.3502L4.11056 12.6155C3.93723 12.5179 3.73222 12.4932 3.54065 12.5467C3.34907 12.6003 3.18662 12.7278 3.08903 12.9011L1.3544 15.9821C1.15119 16.3431 1.27906 16.8004 1.64 17.0036C2.00094 17.2068 2.45828 17.079 2.66149 16.718L3.42822 15.3562C4.05115 17.0054 5.12348 18.4552 6.532 19.536C8.19102 20.809 10.2237 21.499 12.3149 21.499C14.406 21.499 16.4387 20.809 18.0977 19.536C19.7568 18.263 20.9494 16.4781 21.4906 14.4582Z" fill="#f1f6fd" />
-                                                </svg>
-                                                commits
-                                            </p>
+                                                <p className='mb-0'>
+                                                    <svg width="17" height="17" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg" transform="rotate(0 0 0)">
+                                                        <path d="M3.13644 9.54175C3.02923 9.94185 3.26667 10.3531 3.66676 10.4603C4.06687 10.5675 4.47812 10.3301 4.58533 9.92998C5.04109 8.22904 6.04538 6.72602 7.44243 5.65403C8.83948 4.58203 10.5512 4.00098 12.3122 4.00098C14.0731 4.00098 15.7848 4.58203 17.1819 5.65403C18.3999 6.58866 19.3194 7.85095 19.8371 9.28639L18.162 8.34314C17.801 8.1399 17.3437 8.26774 17.1405 8.62867C16.9372 8.98959 17.0651 9.44694 17.426 9.65017L20.5067 11.3849C20.68 11.4825 20.885 11.5072 21.0766 11.4537C21.2682 11.4001 21.4306 11.2727 21.5282 11.0993L23.2629 8.01828C23.4661 7.65734 23.3382 7.2 22.9773 6.99679C22.6163 6.79358 22.159 6.92145 21.9558 7.28239L21.195 8.63372C20.5715 6.98861 19.5007 5.54258 18.095 4.464C16.436 3.19099 14.4033 2.50098 12.3122 2.50098C10.221 2.50098 8.1883 3.19099 6.52928 4.464C4.87027 5.737 3.67766 7.52186 3.13644 9.54175Z" fill="#f1f6fd" />
+                                                        <path d="M21.4906 14.4582C21.5978 14.0581 21.3604 13.6469 20.9603 13.5397C20.5602 13.4325 20.1489 13.6699 20.0417 14.07C19.5859 15.7709 18.5816 17.274 17.1846 18.346C15.7875 19.418 14.0758 19.999 12.3149 19.999C10.5539 19.999 8.84219 19.418 7.44514 18.346C6.2292 17.4129 5.31079 16.1534 4.79261 14.721L6.45529 15.6573C6.81622 15.8605 7.27356 15.7327 7.47679 15.3718C7.68003 15.0108 7.55219 14.5535 7.19127 14.3502L4.11056 12.6155C3.93723 12.5179 3.73222 12.4932 3.54065 12.5467C3.34907 12.6003 3.18662 12.7278 3.08903 12.9011L1.3544 15.9821C1.15119 16.3431 1.27906 16.8004 1.64 17.0036C2.00094 17.2068 2.45828 17.079 2.66149 16.718L3.42822 15.3562C4.05115 17.0054 5.12348 18.4552 6.532 19.536C8.19102 20.809 10.2237 21.499 12.3149 21.499C14.406 21.499 16.4387 20.809 18.0977 19.536C19.7568 18.263 20.9494 16.4781 21.4906 14.4582Z" fill="#f1f6fd" />
+                                                    </svg>
+                                                    commits
+                                                </p>
                                             </div>
                                         )}
                                     </div>
@@ -639,7 +640,7 @@ function Repo() {
                                                                         {file.fileName}
                                                                     </span>
                                                                 </th>
-                                                                <td style={{textAlign: "right"}}>
+                                                                <td style={{ textAlign: "right" }}>
                                                                     <span className="pl-0 pl-md-5">{commitMsg}</span>
                                                                 </td>
                                                                 <td>

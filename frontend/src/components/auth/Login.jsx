@@ -9,6 +9,8 @@ import logo from "../../assets/github-mark-white.svg";
 import { Link } from "react-router-dom";
 
 import { toast } from "react-hot-toast";
+const url = import.meta.env.VITE_BASE_URI;
+
 function Login() {
 
   const [email, setEmail] = useState("");
@@ -21,7 +23,7 @@ function Login() {
 
     try {
       setLoading(true);
-      const res = await axios.post("http://localhost:5000/user/login", { email: email, password: password }, { headers: { "Content-Type": "application/json" } });
+      const res = await axios.post(`${url}/user/login`, { email: email, password: password }, { headers: { "Content-Type": "application/json" } });
 
       if (res.status === 400) {
         setEmail("");

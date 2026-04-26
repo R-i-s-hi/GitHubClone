@@ -109,14 +109,13 @@ nav .profile-btn:hover {
   display: none !important;
 }
 
-
-@media(max-width: 980px) {
+@media (max-width: 980px) {
   nav {
     padding-inline: 1rem;
   }
 }
 
-@media(max-width: 450px) {
+@media (max-width: 450px) {
   .nav-create-line {
     display: none;
   }
@@ -125,8 +124,8 @@ nav .profile-btn:hover {
   }
 }
 
-@media(max-width: 430px) {
-      .dashboard main {
-        padding: 2rem 1.5rem 1.5rem;
-      }
+@media (max-width: 430px) {
+  .dashboard main {
+    padding: 2rem 1.5rem 1.5rem;
+  }
 }

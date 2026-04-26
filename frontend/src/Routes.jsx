@@ -20,7 +20,6 @@ const ProjectRoutes = () => {
         if(userIdFromStorage && !currentUser){
             setCurrentUser(userIdFromStorage);
         }
-        // If user is not logged in and trying to access a protected route, redirect to login
         if(!userIdFromStorage && !["/auth", "/signup"].includes(window.location.pathname)) {
             navigate("/auth");
         }

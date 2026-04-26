@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+const url = import.meta.env.VITE_BASE_URI;
 
 function StarRepoPage() {
   const { id } = useParams();
@@ -7,7 +8,7 @@ function StarRepoPage() {
 
   useEffect(() => {
     const fetchStarredRepos = async () => {
-      const res = await fetch(`http://localhost:5000/user/${id}/starRepos`);
+      const res = await fetch(`${url}/user/${id}/starRepos`);
       if (res.ok) {
         const data = await res.json();
         setRepos(data);

@@ -3,6 +3,7 @@ import Navbar from "../Navbar";
 import "./form.css"
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+const url = import.meta.env.VITE_BASE_URI;
 
 export default function CreateRepoForm() {
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ export default function CreateRepoForm() {
     e.preventDefault();
     try {
 
-        const data = await fetch("http://localhost:5000/repo/create", {
+        const data = await fetch(`${url}/repo/create`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
