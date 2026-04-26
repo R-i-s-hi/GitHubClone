@@ -43,7 +43,7 @@ const startServer = () => {
     const httpServer = http.createServer(app);
     const io = new Server(httpServer, {
         cors: {
-            origin: "*",
+            origin: ["https://github-clone-one-smoky.vercel.app/", "http://localhost:5173"],
             methods: ["GET", "POST"]
         }}
     );
