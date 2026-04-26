@@ -1,14 +1,6 @@
 <div align="center">
 
-<div>
-  <h1>
-    RepoDoc - A GitHub Clone
-  </h1>
-  <small>
-    <a href="https://github-clone-one-smoky.vercel.app/"><i>Live</i></a> &nbsp;&nbsp;
-    <a href="https://github-clone-one-smoky.vercel.app/"><i>Demo Video</i></a>
-  <small>
-</div>
+<h1>RepoDoc - A GitHub Clone</h1>
 
 <p><strong>A full-stack GitHub-inspired platform built with React, Node.js & MongoDB</strong></p>
   <a href="#-overview">Overview</a> •
@@ -33,7 +25,13 @@
 
 ---
 
-## 📖 Overview
+  <small>
+    <a href="https://github-clone-one-smoky.vercel.app/"><i>Live</i></a> &nbsp;&nbsp;
+    <a href="https://github-clone-one-smoky.vercel.app/"><i>Demo Video</i></a>
+  <small>
+</div>
+
+## 📖 Overview [Rishabh](https://github.com/R-i-s-hi)
 
 **RepoDoc** is a fully functional, GitHub-inspired version control platform built from scratch. It supports real repository management, a custom CLI for git-like operations, in-browser file editing with commit history, issue tracking, user authentication, and real-time features via Socket.io, all on a responsive UI powered by React and Bootstrap.
 
