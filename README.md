@@ -31,7 +31,10 @@
   <small>
 </div>
 
-## 📖 Overview [Rishabh](https://github.com/R-i-s-hi)
+## 📖 Overview 
+
+[Live](https://github-clone-one-smoky.vercel.app/)
+[Video walkthrough](https://drive.google.com/file/d/1mJQw6kKtSezEZrpc_MqAwr92K9UJMskJ/view?usp=drivesdk)
 
 **RepoDoc** is a fully functional, GitHub-inspired version control platform built from scratch. It supports real repository management, a custom CLI for git-like operations, in-browser file editing with commit history, issue tracking, user authentication, and real-time features via Socket.io, all on a responsive UI powered by React and Bootstrap.
 
