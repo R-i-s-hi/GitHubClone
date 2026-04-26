@@ -1,12 +1,14 @@
 <div align="center">
 
-<h1>
-  RepoDoc - A GitHub Clone
-</h1>
-<p>
-  <a href="https://github-clone-one-smoky.vercel.app/">Live</a> &nbsp;&nbsp;
-  <a href="https://github-clone-one-smoky.vercel.app/">Demo Video</a>
-<p>
+<div>
+  <h1>
+    RepoDoc - A GitHub Clone
+  </h1>
+  <p>
+    <a href="https://github-clone-one-smoky.vercel.app/">Live</a> &nbsp;&nbsp;
+    <a href="https://github-clone-one-smoky.vercel.app/">Demo Video</a>
+  <p>
+</div>
 
 <p><strong>A full-stack GitHub-inspired platform built with React, Node.js & MongoDB</strong></p>
   <a href="#-overview">Overview</a> •
