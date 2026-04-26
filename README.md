@@ -4,10 +4,10 @@
   <h1>
     RepoDoc - A GitHub Clone
   </h1>
-  <p>
+  <small>
     <a href="https://github-clone-one-smoky.vercel.app/"><i>Live</i></a> &nbsp;&nbsp;
     <a href="https://github-clone-one-smoky.vercel.app/"><i>Demo Video</i></a>
-  <p>
+  <small>
 </div>
 
 <p><strong>A full-stack GitHub-inspired platform built with React, Node.js & MongoDB</strong></p>
