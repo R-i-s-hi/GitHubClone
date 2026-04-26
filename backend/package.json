@@ -4,7 +4,8 @@
   "description": "Git Clone Backend Service",
   "main": "src/index.js",
   "scripts": {
-    "dev": "nodemon src/index.js -- start"
+    "dev": "nodemon src/index.js -- start",
+    "start": "node src/index.js -- start"
   },
   "keywords": [],
   "author": "",
